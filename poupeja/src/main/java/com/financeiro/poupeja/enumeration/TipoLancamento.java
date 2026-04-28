@@ -1,4 +1,4 @@
-package com.financeiro.poupeja.model;
+package com.financeiro.poupeja.enumeration;
 
 public enum TipoLancamento {
     RECEITA,

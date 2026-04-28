@@ -1,16 +1,15 @@
-package com.financeiro.poupeja.model;
+package com.financeiro.poupeja.entity;
 
 import jakarta.persistence.*;
 
 @Entity
-public class Categoria {
+public class FormaPagamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String descricao;
-    private Double meta;
     private Boolean ativo;
 
     @ManyToOne
@@ -31,14 +30,6 @@ public class Categoria {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
-    }
-
-    public Double getMeta() {
-        return meta;
-    }
-
-    public void setMeta(Double meta) {
-        this.meta = meta;
     }
 
     public Boolean getAtivo() {

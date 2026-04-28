@@ -1,4 +1,4 @@
-package com.financeiro.poupeja.model;
+package com.financeiro.poupeja.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;

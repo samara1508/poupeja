@@ -1,8 +1,11 @@
-package com.financeiro.poupeja.model;
+package com.financeiro.poupeja.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+
+import com.financeiro.poupeja.enumeration.TipoLancamento;
+import com.financeiro.poupeja.enumeration.TipoRecorrencia;
 
 @Entity
 public class Lancamento {
