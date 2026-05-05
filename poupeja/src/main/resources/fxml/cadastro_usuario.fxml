@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="15.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.financeiro.poupeja.controller.CadastroUsuarioController">
+    <padding>
+        <Insets bottom="40.0" left="40.0" right="40.0" top="20.0" />
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" maxWidth="300">
+        <Hyperlink text="← Voltar para Login" onAction="#voltarParaLogin" />
+    </HBox>
+
+    <Label text="Cadastre-se no Poupe Já!">
+        <font>
+            <Font size="22.0" />
+        </font>
+        <VBox.margin>
+            <Insets bottom="10.0" top="10.0"/>
+        </VBox.margin>
+    </Label>
+
+    <VBox spacing="5.0" maxWidth="300">
+        <Label text="E-mail" />
+        <TextField fx:id="txtEmail" promptText="Digite seu e-mail" />
+    </VBox>
+
+    <VBox spacing="5.0" maxWidth="300">
+        <Label text="Login" />
+        <TextField fx:id="txtLogin" promptText="Digite seu login" />
+    </VBox>
+
+    <VBox spacing="5.0" maxWidth="300">
+        <Label text="Senha" />
+        <PasswordField fx:id="txtSenha" promptText="Digite sua senha" />
+    </VBox>
+    
+    <VBox spacing="5.0" maxWidth="300">
+        <Label text="Confirmação da Senha" />
+        <PasswordField fx:id="txtConfirmacaoSenha" promptText="Confirme sua senha" />
+    </VBox>
+
+    <Button text="Cadastrar" onAction="#cadastrar" prefWidth="300" prefHeight="40">
+        <VBox.margin>
+            <Insets top="10.0" />
+        </VBox.margin>
+    </Button>
+</VBox>

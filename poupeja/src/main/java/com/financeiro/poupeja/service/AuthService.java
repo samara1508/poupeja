@@ -22,7 +22,7 @@ public class AuthService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public Usuario register(String nome, String email, String senha, String confirmacaoSenha) {
+    public Usuario criarUsuario(String nome, String email, String senha, String confirmacaoSenha) {
         if (senha == null || senha.length() < 8) {
             throw new IllegalArgumentException("A senha deve conter no mínimo 8 caracteres.");
         }
@@ -47,19 +47,38 @@ public class AuthService {
         return usuarioRepository.save(novoUsuario);
     }
 
-    public Usuario login(String email, String senha) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
+    public Usuario login(String nome, String senha) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByNome(nome);
 
         if (usuarioOpt.isEmpty()) {
-            throw new AcessoNegadoException("Credenciais inválidas.");
+            throw new AcessoNegadoException("Usuário não encontrado.");
         }
 
         Usuario usuario = usuarioOpt.get();
 
         if (!usuario.getSenha().equals(senha)) {
-            throw new AcessoNegadoException("Credenciais inválidas.");
+            throw new AcessoNegadoException("Senha inválida.");
         }
 
         return usuario;
+    }
+
+    public void alterarSenha(String nome, String novaSenha, String confirmacaoSenha) {
+        if (novaSenha == null || novaSenha.length() < 8) {
+            throw new IllegalArgumentException("A nova senha deve conter no mínimo 8 caracteres.");
+        }
+
+        if (!novaSenha.equals(confirmacaoSenha)) {
+            throw new IllegalArgumentException("A nova senha e a confirmação não conferem.");
+        }
+
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByNome(nome);
+        if (usuarioOpt.isEmpty()) {
+            throw new AcessoNegadoException("Usuário não encontrado.");
+        }
+
+        Usuario usuario = usuarioOpt.get();
+        usuario.setSenha(novaSenha);
+        usuarioRepository.save(usuario);
     }
 }

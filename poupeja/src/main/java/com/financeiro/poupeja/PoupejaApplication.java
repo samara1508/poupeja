@@ -6,11 +6,13 @@ import javafx.stage.Stage;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+import com.financeiro.poupeja.util.SpringFXMLLoader;
 
 @SpringBootApplication
 public class PoupejaApplication extends Application {
 
     private ConfigurableApplicationContext applicationContext;
+    private static Stage primaryStage;
 
     @Override
     public void init() {
@@ -21,8 +23,18 @@ public class PoupejaApplication extends Application {
     }
 
     @Override
-    public void start(Stage stage) {
-        // A fase 4 irá inicializar o JavaFX e abrir a primeira tela.
+    public void start(Stage stage) throws Exception {
+        PoupejaApplication.primaryStage = stage;
+        SpringFXMLLoader loader = applicationContext.getBean(SpringFXMLLoader.class);
+        
+        javafx.scene.Parent root = loader.load("/fxml/login.fxml");
+        stage.setTitle("PoupeJá! - Login");
+        stage.setScene(new javafx.scene.Scene(root, 400, 500));
+        stage.show();
+    }
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
     }
 
     @Override

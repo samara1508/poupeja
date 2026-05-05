@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="15.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.financeiro.poupeja.controller.MenuPrincipalController">
+    <padding>
+        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+    </padding>
+
+    <Label text="Poupe Já!">
+        <font>
+            <Font size="26.0" />
+        </font>
+        <VBox.margin>
+            <Insets bottom="20.0" />
+        </VBox.margin>
+    </Label>
+
+    <Button text="Dashboard" onAction="#acaoNaoImplementada" prefWidth="300" prefHeight="40" />
+    <Button text="Lançamento de Despesas e Receitas" onAction="#acaoNaoImplementada" prefWidth="300" prefHeight="40" />
+    <Button text="Formas de pagamento" onAction="#acaoNaoImplementada" prefWidth="300" prefHeight="40" />
+    <Button text="Categorias" onAction="#acaoNaoImplementada" prefWidth="300" prefHeight="40" />
+    <Button text="Alertas" onAction="#acaoNaoImplementada" prefWidth="300" prefHeight="40" />
+    <Button text="Totais por forma de pagamento" onAction="#acaoNaoImplementada" prefWidth="300" prefHeight="40" />
+    <Button text="Totais por categoria" onAction="#acaoNaoImplementada" prefWidth="300" prefHeight="40" />
+
+    <Hyperlink text="Sair" onAction="#sair">
+        <VBox.margin>
+            <Insets top="20.0" />
+        </VBox.margin>
+    </Hyperlink>
+</VBox>
