@@ -43,11 +43,6 @@ public class CadastroUsuarioController {
         String senha = txtSenha.getText();
         String confirmacaoSenha = txtConfirmacaoSenha.getText();
 
-        if (email.isEmpty() || login.isEmpty() || senha.isEmpty() || confirmacaoSenha.isEmpty()) {
-            MessageUtils.erro("Todos os campos são obrigatórios.");
-            return;
-        }
-
         try {
             authService.criarUsuario(login, email, senha, confirmacaoSenha);
             MessageUtils.sucesso("Usuário cadastrado com sucesso!");

@@ -1,60 +1,42 @@
 package com.financeiro.poupeja.service;
 
+import org.springframework.stereotype.Service;
+
 import com.financeiro.poupeja.entity.Usuario;
 import com.financeiro.poupeja.exception.AcessoNegadoException;
 import com.financeiro.poupeja.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.Optional;
-import java.util.regex.Pattern;
+import com.financeiro.poupeja.util.Utils;
 
 @Service
 public class AuthService {
 
     private final UsuarioRepository usuarioRepository;
 
-    private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
-    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
-
-    @Autowired
     public AuthService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
     }
 
     public Usuario criarUsuario(String nome, String email, String senha, String confirmacaoSenha) {
-        if (senha == null || senha.length() < 8) {
-            throw new IllegalArgumentException("A senha deve conter no mínimo 8 caracteres.");
-        }
-
-        if (!senha.equals(confirmacaoSenha)) {
-            throw new IllegalArgumentException("A senha e a confirmação de senha não conferem.");
-        }
-
-        if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
-            throw new IllegalArgumentException("O formato do e-mail é inválido.");
-        }
+        Usuario novoUsuario = new Usuario();
+        novoUsuario.setNome(nome);
+        novoUsuario.setEmail(email);
+        novoUsuario.setSenha(senha);
+        
+        novoUsuario.confirmarSenha(confirmacaoSenha);
 
         if (usuarioRepository.existsByEmail(email)) {
             throw new AcessoNegadoException("E-mail já utilizado.");
         }
 
-        Usuario novoUsuario = new Usuario();
-        novoUsuario.setNome(nome);
-        novoUsuario.setEmail(email);
-        novoUsuario.setSenha(senha);
 
         return usuarioRepository.save(novoUsuario);
     }
 
     public Usuario login(String nome, String senha) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByNome(nome);
+        validarLogin(nome, senha);
 
-        if (usuarioOpt.isEmpty()) {
-            throw new AcessoNegadoException("Usuário não encontrado.");
-        }
-
-        Usuario usuario = usuarioOpt.get();
+		Usuario usuario = usuarioRepository.findByNome(nome)
+				.orElseThrow(() -> new AcessoNegadoException("Usuário não encontrado."));
 
         if (!usuario.getSenha().equals(senha)) {
             throw new AcessoNegadoException("Senha inválida.");
@@ -64,21 +46,36 @@ public class AuthService {
     }
 
     public void alterarSenha(String nome, String novaSenha, String confirmacaoSenha) {
-        if (novaSenha == null || novaSenha.length() < 8) {
-            throw new IllegalArgumentException("A nova senha deve conter no mínimo 8 caracteres.");
-        }
+        validarAlteracaoSenha(nome, novaSenha, confirmacaoSenha);
 
-        if (!novaSenha.equals(confirmacaoSenha)) {
-            throw new IllegalArgumentException("A nova senha e a confirmação não conferem.");
-        }
+		Usuario usuario = usuarioRepository.findByNome(nome)
+				.orElseThrow(() -> new AcessoNegadoException("Usuário não encontrado."));
 
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByNome(nome);
-        if (usuarioOpt.isEmpty()) {
-            throw new AcessoNegadoException("Usuário não encontrado.");
-        }
-
-        Usuario usuario = usuarioOpt.get();
         usuario.setSenha(novaSenha);
         usuarioRepository.save(usuario);
     }
+
+	private void validarLogin(String nome, String senha) {
+		if (Utils.isEmpty(nome)) {
+            throw new IllegalArgumentException("O login é obrigatório.");
+        }
+        if (Utils.isEmpty(senha)) {
+            throw new IllegalArgumentException("Senha é obrigatório.");
+        }
+	}
+	
+	private void validarAlteracaoSenha(String nome, String novaSenha, String confirmacaoSenha) {
+		if (Utils.isEmpty(nome)) {
+            throw new IllegalArgumentException("Login é obrigatório.");
+        }
+        if (Utils.isEmpty(novaSenha)) {
+            throw new IllegalArgumentException("Senha é obrigatório.");
+        }
+        if (Utils.isEmpty(confirmacaoSenha)) {
+            throw new IllegalArgumentException("Confirmação de senha é obrigatório.");
+        }
+        if (!novaSenha.equals(confirmacaoSenha)) {
+            throw new IllegalArgumentException("A confirmação de senha e a nova senha devem ser idênticas.");
+        }
+	}
 }

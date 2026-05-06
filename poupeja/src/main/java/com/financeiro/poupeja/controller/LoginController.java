@@ -40,7 +40,7 @@ public class LoginController {
         try {
             authService.login(login, senha);
             navegarPara("/fxml/menu_principal.fxml", "PoupeJá! - Menu");
-        } catch (AcessoNegadoException e) {
+        } catch (IllegalArgumentException | AcessoNegadoException e) {
             MessageUtils.erro(e.getMessage());
         }
     }

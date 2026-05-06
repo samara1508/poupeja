@@ -39,11 +39,6 @@ public class AlterarSenhaController {
         String novaSenha = txtNovaSenha.getText();
         String confirmacaoSenha = txtConfirmacaoSenha.getText();
 
-        if (login.isEmpty() || novaSenha.isEmpty() || confirmacaoSenha.isEmpty()) {
-            MessageUtils.erro("Todos os campos são obrigatórios.");
-            return;
-        }
-
         try {
             authService.alterarSenha(login, novaSenha, confirmacaoSenha);
             MessageUtils.sucesso("Senha alterada com sucesso!");
