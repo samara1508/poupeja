@@ -11,7 +11,7 @@ import com.financeiro.poupeja.util.SpringFXMLLoader;
 
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
+import com.financeiro.poupeja.util.MessageUtils;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
@@ -41,7 +41,7 @@ public class LoginController {
             authService.login(login, senha);
             navegarPara("/fxml/menu_principal.fxml", "PoupeJá! - Menu");
         } catch (AcessoNegadoException e) {
-            mostrarErro("Erro de Autenticação", e.getMessage());
+            MessageUtils.erro(e.getMessage());
         }
     }
 
@@ -61,15 +61,9 @@ public class LoginController {
             PoupejaApplication.getPrimaryStage().setTitle(titulo);
             PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
         } catch (IOException e) {
-            mostrarErro("Erro", "Não foi possível carregar a tela.");
+            MessageUtils.erro("Não foi possível carregar a tela.");
         }
     }
 
-    private void mostrarErro(String titulo, String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.showAndWait();
-    }
+
 }

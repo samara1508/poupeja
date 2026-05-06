@@ -2,6 +2,8 @@ package com.financeiro.poupeja;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -27,9 +29,9 @@ public class PoupejaApplication extends Application {
         PoupejaApplication.primaryStage = stage;
         SpringFXMLLoader loader = applicationContext.getBean(SpringFXMLLoader.class);
         
-        javafx.scene.Parent root = loader.load("/fxml/login.fxml");
+        Parent root = loader.load("/fxml/login.fxml");
         stage.setTitle("PoupeJá! - Login");
-        stage.setScene(new javafx.scene.Scene(root, 400, 500));
+        stage.setScene(new Scene(root, 400, 500));
         stage.show();
     }
 

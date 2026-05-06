@@ -4,7 +4,7 @@ import com.financeiro.poupeja.PoupejaApplication;
 import com.financeiro.poupeja.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
+import com.financeiro.poupeja.util.MessageUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -25,24 +25,14 @@ public class MenuPrincipalController {
             PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Login");
             PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
         } catch (IOException e) {
-            mostrarErro("Erro de Navegação", "Não foi possível carregar a tela de Login.");
+            MessageUtils.erro("Não foi possível carregar a tela de Login.");
         }
     }
 
     @FXML
     public void acaoNaoImplementada() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Em Construção");
-        alert.setHeaderText(null);
-        alert.setContentText("Esta funcionalidade ainda não foi implementada.");
-        alert.showAndWait();
+        MessageUtils.informacao("Esta funcionalidade ainda não foi implementada.");
     }
 
-    private void mostrarErro(String titulo, String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.showAndWait();
-    }
+
 }

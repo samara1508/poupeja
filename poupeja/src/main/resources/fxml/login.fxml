@@ -21,7 +21,7 @@
 
     <VBox spacing="5.0" maxWidth="300">
         <Label text="Login" />
-        <TextField fx:id="txtLogin" promptText="Digite seu login (e-mail)" />
+        <TextField fx:id="txtLogin" promptText="Digite seu login" />
     </VBox>
 
     <VBox spacing="5.0" maxWidth="300">

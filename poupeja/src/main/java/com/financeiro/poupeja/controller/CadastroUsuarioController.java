@@ -1,11 +1,12 @@
 package com.financeiro.poupeja.controller;
 
 import com.financeiro.poupeja.PoupejaApplication;
+import com.financeiro.poupeja.exception.AcessoNegadoException;
 import com.financeiro.poupeja.service.AuthService;
 import com.financeiro.poupeja.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
+import com.financeiro.poupeja.util.MessageUtils;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import org.springframework.stereotype.Component;
@@ -38,21 +39,21 @@ public class CadastroUsuarioController {
     @FXML
     public void cadastrar() {
         String email = txtEmail.getText();
-        String login = txtLogin.getText(); // Representa o Nome no back-end atualmente
+        String login = txtLogin.getText();
         String senha = txtSenha.getText();
         String confirmacaoSenha = txtConfirmacaoSenha.getText();
 
         if (email.isEmpty() || login.isEmpty() || senha.isEmpty() || confirmacaoSenha.isEmpty()) {
-            mostrarErro("Validação", "Todos os campos são obrigatórios.");
+            MessageUtils.erro("Todos os campos são obrigatórios.");
             return;
         }
 
         try {
             authService.criarUsuario(login, email, senha, confirmacaoSenha);
-            mostrarSucesso("Cadastro realizado com sucesso!", "Você já pode realizar o login.");
+            MessageUtils.sucesso("Usuário cadastrado com sucesso!");
             voltarParaLogin();
-        } catch (IllegalArgumentException | com.financeiro.poupeja.exception.AcessoNegadoException e) {
-            mostrarErro("Erro no Cadastro", e.getMessage());
+        } catch (IllegalArgumentException | AcessoNegadoException e) {
+            MessageUtils.erro(e.getMessage());
         }
     }
 
@@ -63,23 +64,9 @@ public class CadastroUsuarioController {
             PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Login");
             PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
         } catch (IOException e) {
-            mostrarErro("Erro de Navegação", "Não foi possível carregar a tela de Login.");
+            MessageUtils.erro("Não foi possível carregar a tela de Login.");
         }
     }
 
-    private void mostrarErro(String titulo, String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.showAndWait();
-    }
 
-    private void mostrarSucesso(String titulo, String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.showAndWait();
-    }
 }
