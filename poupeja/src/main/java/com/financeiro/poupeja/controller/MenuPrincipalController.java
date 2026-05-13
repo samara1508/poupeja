@@ -1,6 +1,7 @@
 package com.financeiro.poupeja.controller;
 
 import com.financeiro.poupeja.PoupejaApplication;
+import com.financeiro.poupeja.util.MessageUtils;
 import com.financeiro.poupeja.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
