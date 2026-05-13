@@ -38,6 +38,19 @@ public class MenuPrincipalController {
         alert.showAndWait();
     }
 
+    @FXML
+    public void abrirFormasPagamento() {
+        try {
+            Parent root = fxmlLoader.load("/fxml/forma_pagamento.fxml");
+
+            PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Formas de Pagamento");
+            PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
+
+        } catch (IOException e) {
+            mostrarErro("Erro de Navegação", "Não foi possível carregar a tela de Formas de Pagamento.");
+        }
+    }
+
     private void mostrarErro(String titulo, String mensagem) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(titulo);
