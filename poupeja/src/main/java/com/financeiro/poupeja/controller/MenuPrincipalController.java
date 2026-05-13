@@ -19,6 +19,17 @@ public class MenuPrincipalController {
     }
 
     @FXML
+    public void listarCategorias() {
+        try {
+            Parent root = fxmlLoader.load("/fxml/lista_categoria.fxml");
+            PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Categorias");
+            PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
+        } catch (IOException e) {
+            MessageUtils.erro("Não Foi Possível Carregar a Tela de Categorias.");
+        }
+    }
+
+    @FXML
     public void sair() {
         try {
             Parent root = fxmlLoader.load("/fxml/login.fxml");
