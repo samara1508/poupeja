@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="15.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.financeiro.poupeja.controller.CadastroCategoriaController">
+    <padding>
+        <Insets bottom="40.0" left="40.0" right="40.0" top="20.0" />
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" maxWidth="300">
+        <Hyperlink text="← Voltar para Categorias" onAction="#voltarParaCategorias" />
+    </HBox>
+
+    <Label text="Categorias: ">
+        <font>
+            <Font size="22.0" />
+        </font>
+        <VBox.margin>
+            <Insets bottom="10.0" top="10.0"/>
+        </VBox.margin>
+    </Label>
+
+    <VBox spacing="5.0" maxWidth="300">
+        <Label text="Nome" />
+        <TextField fx:id="txtNome" promptText="Digite o Nome da Categoria" />
+    </VBox>
+
+    <VBox spacing="5.0" maxWidth="300">
+        <Label text="Limite" />
+        <TextField fx:id="txtLimite" promptText="Digite o Valor Limite da Categoria" />
+    </VBox>
+
+    <Button text="Criar Categoria" onAction="#criaCategoria" prefWidth="300" prefHeight="40">
+        <VBox.margin>
+            <Insets top="10.0" />
+        </VBox.margin>
+    </Button>
+</VBox>

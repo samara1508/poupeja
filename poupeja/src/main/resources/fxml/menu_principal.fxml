@@ -22,7 +22,7 @@
     <Button text="Dashboard" onAction="#acaoNaoImplementada" prefWidth="300" prefHeight="40" />
     <Button text="Lançamento de Despesas e Receitas" onAction="#acaoNaoImplementada" prefWidth="300" prefHeight="40" />
     <Button text="Formas de pagamento" onAction="#abrirFormasPagamento" prefWidth="300" prefHeight="40" />
-    <Button text="Categorias" onAction="#acaoNaoImplementada" prefWidth="300" prefHeight="40" />
+    <Button text="Categorias" onAction="#listarCategorias" prefWidth="300" prefHeight="40" />
     <Button text="Alertas" onAction="#acaoNaoImplementada" prefWidth="300" prefHeight="40" />
     <Button text="Totais por forma de pagamento" onAction="#acaoNaoImplementada" prefWidth="300" prefHeight="40" />
     <Button text="Totais por categoria" onAction="#acaoNaoImplementada" prefWidth="300" prefHeight="40" />
