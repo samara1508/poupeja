@@ -2,8 +2,10 @@ package com.financeiro.poupeja.controller;
 
 
 import com.financeiro.poupeja.PoupejaApplication;
+import com.financeiro.poupeja.entity.Usuario;
+import com.financeiro.poupeja.exception.AcessoNegadoException;
 import com.financeiro.poupeja.util.SpringFXMLLoader;
-
+import com.financeiro.poupeja.service.CategoriaService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.TextField;
@@ -23,9 +25,13 @@ public class CadastroCategoriaController {
     @FXML
     private TextField txtLimite;
 
-    public CadastroCategoriaController(SpringFXMLLoader fxmlLoader){
+    private CategoriaService categoriaService;
+
+    public CadastroCategoriaController(CategoriaService categoriaService, SpringFXMLLoader fxmlLoader){
+        this.categoriaService = categoriaService;
         this.fxmlLoader = fxmlLoader;
     }
+    
 
     @FXML
     public void voltarParaLogin() {
@@ -51,8 +57,16 @@ public class CadastroCategoriaController {
 
     @FXML
     public void criaCategoria() {
-        String nome = txtNome.getText();
-        String limite = txtLimite.getText();
-        MessageUtils.informacao("Nome: " + nome + "; Limite: " + limite + ".");
+        String descricao = txtNome.getText();
+        double meta = Double.parseDouble(txtLimite.getText());
+        MessageUtils.informacao("Nome: " + descricao + "; Limite: " + meta + ".");
+
+        try {
+            categoriaService.cadastrarCategoria(null, descricao, meta, true);
+            MessageUtils.sucesso("Usuário cadastrado com sucesso!");
+            voltarParaLogin();
+        } catch (IllegalArgumentException | AcessoNegadoException e) {
+            MessageUtils.erro(e.getMessage());
+        }
     }
 }
