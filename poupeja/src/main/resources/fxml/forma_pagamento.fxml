@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.financeiro.poupeja.controller.FormaPagamentoController"
+            style="-fx-background-color: #F5F5F5;">
+
+    <!-- TOPO -->
+    <top>
+
+        <VBox alignment="TOP_CENTER" spacing="20">
+
+            <padding>
+                <Insets top="30" right="30" bottom="20" left="30"/>
+            </padding>
+
+            <!-- Botão voltar -->
+            <HBox alignment="TOP_LEFT" maxWidth="400">
+
+                <Button text="← Voltar para Menu"
+                        onAction="#voltarMenu"
+                        style="-fx-background-color: transparent;
+                               -fx-text-fill: #555;"/>
+
+            </HBox>
+
+            <!-- Título -->
+            <Label text="Formas de Pagamento">
+
+                <font>
+                    <Font size="22"/>
+                </font>
+
+            </Label>
+
+        </VBox>
+
+    </top>
+
+    <!-- CENTRO -->
+    <center>
+
+        <ScrollPane fitToWidth="true"
+                    style="-fx-background-color: transparent;">
+
+            <content>
+
+                <VBox fx:id="containerFormasPagamento"
+                      spacing="15"
+                      alignment="TOP_CENTER">
+
+                    <padding>
+                        <Insets right="30" left="30" bottom="20"/>
+                    </padding>
+
+                </VBox>
+
+            </content>
+
+        </ScrollPane>
+
+    </center>
+
+    <!-- RODAPÉ FIXO -->
+    <bottom>
+
+        <VBox alignment="CENTER">
+
+            <padding>
+                <Insets top="15" right="30" bottom="30" left="30"/>
+            </padding>
+
+            <Button text="Criar Nova Forma de Pagamento"
+                    prefHeight="45"
+                    maxWidth="400"
+                    onAction="#criarNovaForma"/>
+
+        </VBox>
+
+    </bottom>
+
+</BorderPane>

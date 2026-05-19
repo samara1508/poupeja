@@ -16,6 +16,15 @@ public class FormaPagamento {
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
+    public FormaPagamento() {
+    }
+
+    public FormaPagamento(String descricao, Boolean ativo, Usuario usuario) {
+        this.descricao = descricao;
+        this.ativo = ativo;
+        this.usuario = usuario;
+    }
+
     public Long getId() {
         return id;
     }

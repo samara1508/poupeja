@@ -8,9 +8,11 @@ import javafx.stage.Stage;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import com.financeiro.poupeja.util.SpringFXMLLoader;
 
 @SpringBootApplication
+@EnableScheduling
 public class PoupejaApplication extends Application {
 
     private ConfigurableApplicationContext applicationContext;

@@ -1,21 +1,71 @@
 package com.financeiro.poupeja.controller;
 
 import com.financeiro.poupeja.PoupejaApplication;
+import com.financeiro.poupeja.util.MessageUtils;
 import com.financeiro.poupeja.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import com.financeiro.poupeja.util.MessageUtils;
+import javafx.scene.control.Alert;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+
+import com.financeiro.poupeja.util.Sessao;
 
 @Component
 public class MenuPrincipalController {
 
     private final SpringFXMLLoader fxmlLoader;
+    private final Sessao sessao;
 
-    public MenuPrincipalController(SpringFXMLLoader fxmlLoader) {
+    public MenuPrincipalController(SpringFXMLLoader fxmlLoader, Sessao sessao) {
         this.fxmlLoader = fxmlLoader;
+        this.sessao = sessao;
+    }
+
+    @FXML
+    public void sair() {
+        try {
+            sessao.logout();
+            Parent root = fxmlLoader.load("/fxml/login.fxml");
+            PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Login");
+            PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
+        } catch (IOException e) {
+            mostrarErro("Erro de Navegação", "Não foi possível carregar a tela de Login.");
+        }
+    }
+
+    @FXML
+    public void acaoNaoImplementada() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Em Construção");
+        alert.setHeaderText(null);
+        alert.setContentText("Esta funcionalidade ainda não foi implementada.");
+        alert.showAndWait();
+    }
+
+    @FXML
+    public void abrirFormasPagamento() {
+        try {
+            Parent root = fxmlLoader.load("/fxml/forma_pagamento.fxml");
+
+            PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Formas de Pagamento");
+            PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
+
+        } catch (IOException e) {
+            mostrarErro("Erro de Navegação", "Não foi possível carregar a tela de Formas de Pagamento.");
+        }
+    }
+
+    @FXML
+    public void abrirAlertas() {
+        try {
+            Parent root = fxmlLoader.load("/fxml/alertas.fxml");
+            PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Alertas");
+            PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
+        } catch (IOException e) {
+            mostrarErro("Erro de Navegação", "Não foi possível carregar a tela de Alertas.");
+        }
     }
 
     @FXML
@@ -29,21 +79,11 @@ public class MenuPrincipalController {
         }
     }
 
-    @FXML
-    public void sair() {
-        try {
-            Parent root = fxmlLoader.load("/fxml/login.fxml");
-            PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Login");
-            PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
-        } catch (IOException e) {
-            MessageUtils.erro("Não foi possível carregar a tela de Login.");
-        }
+    private void mostrarErro(String titulo, String mensagem) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+        alert.showAndWait();
     }
-
-    @FXML
-    public void acaoNaoImplementada() {
-        MessageUtils.informacao("Esta funcionalidade ainda não foi implementada.");
-    }
-
-
 }

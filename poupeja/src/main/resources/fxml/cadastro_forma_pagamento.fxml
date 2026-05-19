@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_CENTER"
+      spacing="20.0"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.financeiro.poupeja.controller.CadastroFormaPagamentoController">
+
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <!-- Voltar -->
+    <HBox alignment="TOP_LEFT" maxWidth="400">
+        <Button text="← Voltar"
+                onAction="#voltar"
+                style="-fx-background-color: transparent; -fx-text-fill: #555;"/>
+    </HBox>
+
+    <!-- Título -->
+    <Label text="Nova Forma de Pagamento">
+        <font>
+            <Font size="22"/>
+        </font>
+    </Label>
+
+    <!-- Campo Nome -->
+    <VBox spacing="5" maxWidth="400">
+
+        <Label text="Nome da Forma de Pagamento"/>
+
+        <TextField fx:id="txtNome"
+                   promptText="Ex: Boleto, Vale Alimentação..."/>
+
+    </VBox>
+
+    <!-- Checkbox ativo -->
+    <CheckBox fx:id="chkAtivo"
+              text="Forma de pagamento ativa"
+              selected="true"/>
+
+    <!-- Botão salvar -->
+    <Button text="Salvar"
+            prefWidth="400"
+            prefHeight="40"
+            onAction="#salvar"/>
+
+</VBox>
