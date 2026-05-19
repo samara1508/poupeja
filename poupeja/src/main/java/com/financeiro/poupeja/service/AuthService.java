@@ -5,16 +5,18 @@ import org.springframework.stereotype.Service;
 import com.financeiro.poupeja.entity.Usuario;
 import com.financeiro.poupeja.exception.AcessoNegadoException;
 import com.financeiro.poupeja.repository.UsuarioRepository;
+import com.financeiro.poupeja.util.Sessao;
 import com.financeiro.poupeja.util.Utils;
 
 @Service
 public class AuthService {
 
     private final UsuarioRepository usuarioRepository;
-    private Usuario usuarioLogado;
+    private final Sessao sessao;
 
-    public AuthService(UsuarioRepository usuarioRepository) {
+    public AuthService(UsuarioRepository usuarioRepository, Sessao sessao) {
         this.usuarioRepository = usuarioRepository;
+        this.sessao = sessao;
     }
 
     public Usuario criarUsuario(String nome, String email, String senha, String confirmacaoSenha) {
@@ -43,7 +45,7 @@ public class AuthService {
             throw new AcessoNegadoException("Senha inválida.");
         }
 
-        usuarioLogado = usuario;
+        sessao.login(usuario);
 
         return usuario;
     }
@@ -84,7 +86,7 @@ public class AuthService {
     }
 
     public Usuario getUsuarioLogado() {
-        return usuarioLogado;
+        return sessao.getUsuarioLogado();
     }
 
 }

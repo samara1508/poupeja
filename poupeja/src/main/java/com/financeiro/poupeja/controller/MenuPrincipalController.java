@@ -10,18 +10,23 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+import com.financeiro.poupeja.util.Sessao;
+
 @Component
 public class MenuPrincipalController {
 
     private final SpringFXMLLoader fxmlLoader;
+    private final Sessao sessao;
 
-    public MenuPrincipalController(SpringFXMLLoader fxmlLoader) {
+    public MenuPrincipalController(SpringFXMLLoader fxmlLoader, Sessao sessao) {
         this.fxmlLoader = fxmlLoader;
+        this.sessao = sessao;
     }
 
     @FXML
     public void sair() {
         try {
+            sessao.logout();
             Parent root = fxmlLoader.load("/fxml/login.fxml");
             PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Login");
             PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
@@ -49,6 +54,17 @@ public class MenuPrincipalController {
 
         } catch (IOException e) {
             mostrarErro("Erro de Navegação", "Não foi possível carregar a tela de Formas de Pagamento.");
+        }
+    }
+
+    @FXML
+    public void abrirAlertas() {
+        try {
+            Parent root = fxmlLoader.load("/fxml/alertas.fxml");
+            PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Alertas");
+            PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
+        } catch (IOException e) {
+            mostrarErro("Erro de Navegação", "Não foi possível carregar a tela de Alertas.");
         }
     }
 
