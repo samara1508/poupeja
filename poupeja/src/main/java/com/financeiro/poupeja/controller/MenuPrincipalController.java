@@ -69,6 +69,17 @@ public class MenuPrincipalController {
     }
 
     @FXML
+    public void abrirLancamentos() {
+        try {
+            Parent root = fxmlLoader.load("/fxml/lancamentos.fxml");
+            PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Lançamentos");
+            PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
+        } catch (IOException e) {
+            mostrarErro("Erro de Navegação", "Não foi possível carregar a tela de Lançamentos.");
+        }
+    }
+
+    @FXML
     public void listarCategorias() {
         try {
             Parent root = fxmlLoader.load("/fxml/lista_categoria.fxml");

@@ -36,7 +36,7 @@ public class Lancamento {
     @JoinColumn(name = "forma_pagamento_id")
     private FormaPagamento formaPagamento;
 
-    @OneToMany(mappedBy = "lancamento", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "lancamento", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Parcela> parcelas;
 
     public Long getId() {
@@ -109,6 +109,14 @@ public class Lancamento {
 
     public void setFormaPagamento(FormaPagamento formaPagamento) {
         this.formaPagamento = formaPagamento;
+    }
+
+    public List<Parcela> getParcelas() {
+        return parcelas;
+    }
+
+    public void setParcelas(List<Parcela> parcelas) {
+        this.parcelas = parcelas;
     }
 
 }

@@ -65,11 +65,8 @@ public class FormaPagamentoController {
         HBox linha = new HBox(10);
 
         linha.setAlignment(Pos.CENTER_LEFT);
-
         linha.setPadding(new Insets(12));
-
         linha.setPrefHeight(50);
-
         linha.setMaxWidth(400);
 
         linha.setStyle(
@@ -81,19 +78,9 @@ public class FormaPagamentoController {
 
         Label lblNome = criarLabelNome(forma, linha);
 
-        lblNome.setStyle(
-                "-fx-font-size: 14px;"
-        );
-
         HBox.setHgrow(lblNome, Priority.ALWAYS);
 
-        CheckBox chkAtivo = new CheckBox("Ativo");
-
-        chkAtivo.setMinWidth(80);
-
-        chkAtivo.setStyle(
-                "-fx-font-size: 13px;"
-        );
+        CheckBox chkAtivo = criarCheckBoxAtivo(forma);
 
         linha.getChildren().addAll(lblNome, chkAtivo);
 
