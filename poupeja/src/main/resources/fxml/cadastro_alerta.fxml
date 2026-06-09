@@ -16,38 +16,32 @@
         <Insets top="30" right="30" bottom="30" left="30"/>
     </padding>
 
-    <!-- Voltar -->
     <HBox alignment="TOP_LEFT" maxWidth="400">
         <Button text="← Voltar"
                 onAction="#voltar"
                 style="-fx-background-color: transparent; -fx-text-fill: #555;"/>
     </HBox>
 
-    <!-- Título -->
     <Label text="Novo Alerta">
         <font>
             <Font size="22"/>
         </font>
     </Label>
 
-    <!-- Campos do Formulário -->
     <VBox spacing="15" maxWidth="400">
 
-        <!-- Campo Descrição -->
         <VBox spacing="5" maxWidth="400">
             <Label text="Descrição da Conta / Despesa"/>
             <TextField fx:id="txtDescricao"
                        promptText="Ex: Conta de Luz, Parcela do Carro..."/>
         </VBox>
 
-        <!-- Campo Espaçamento de Dias -->
         <VBox spacing="5" maxWidth="400">
             <Label text="Lembrete de Antecedência (Dias)"/>
             <TextField fx:id="txtDiasAntes"
                        promptText="Ex: 5, 2, 0..."/>
         </VBox>
 
-        <!-- Campo Data de Vencimento -->
         <VBox spacing="5" maxWidth="400">
             <Label text="Data de Vencimento"/>
             <DatePicker fx:id="dpDataVencimento"
@@ -57,7 +51,6 @@
 
     </VBox>
 
-    <!-- Botão Salvar -->
     <Button text="Salvar"
             prefWidth="400"
             prefHeight="40"
