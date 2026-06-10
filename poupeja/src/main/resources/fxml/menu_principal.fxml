@@ -20,7 +20,7 @@
     </Label>
 
     <Button text="Dashboard" onAction="#acaoNaoImplementada" prefWidth="300" prefHeight="40" />
-    <Button text="Lançamento de Despesas e Receitas" onAction="#acaoNaoImplementada" prefWidth="300" prefHeight="40" />
+    <Button text="Lançamento de Despesas e Receitas" onAction="#abrirLancamentos" prefWidth="300" prefHeight="40" />
     <Button text="Formas de pagamento" onAction="#abrirFormasPagamento" prefWidth="300" prefHeight="40" />
     <Button text="Categorias" onAction="#listarCategorias" prefWidth="300" prefHeight="40" />
     <Button text="Alertas" onAction="#abrirAlertas" prefWidth="300" prefHeight="40" />

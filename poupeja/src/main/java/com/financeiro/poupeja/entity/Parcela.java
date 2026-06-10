@@ -18,6 +18,14 @@ public class Parcela {
     @JoinColumn(name = "lancamento_id")
     private Lancamento lancamento;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Integer getNumParcela() {
         return numParcela;
     }

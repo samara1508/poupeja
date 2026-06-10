@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fitToWidth="true"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.financeiro.poupeja.controller.CadastroLancamentoController"
+            style="-fx-background-color: #F5F5F5; -fx-background: #F5F5F5;">
+
+    <content>
+        <VBox alignment="TOP_CENTER"
+              spacing="20.0"
+              style="-fx-background-color: #F5F5F5;">
+
+            <padding>
+                <Insets top="30" right="30" bottom="30" left="30"/>
+            </padding>
+
+            <HBox alignment="TOP_LEFT" maxWidth="400">
+                <Button text="← Voltar"
+                        onAction="#voltar"
+                        style="-fx-background-color: transparent; -fx-text-fill: #555;"/>
+            </HBox>
+
+            <Label fx:id="lblTitulo" text="Novo Lançamento">
+                <font>
+                    <Font size="22"/>
+                </font>
+            </Label>
+
+            <VBox spacing="15" maxWidth="400">
+                <VBox spacing="5" maxWidth="400">
+                    <Label text="Descrição"/>
+                    <TextField fx:id="txtDescricao"
+                               promptText="Ex: Salário, Mercado, Conta de Luz..."/>
+                </VBox>
+
+                <VBox spacing="5" maxWidth="400">
+                    <Label text="Valor"/>
+                    <TextField fx:id="txtValor"
+                               promptText="Ex: 150,00"/>
+                </VBox>
+
+                <VBox spacing="5" maxWidth="400">
+                    <Label text="Quantidade de Parcelas"/>
+                    <TextField fx:id="txtQuantidadeParcelas"
+                               promptText="Ex: 1, 3, 12..."/>
+                </VBox>
+
+                <VBox spacing="5" maxWidth="400">
+                    <Label text="Data"/>
+                    <DatePicker fx:id="dpData"
+                                promptText="Selecione a data..."
+                                maxWidth="Infinity"/>
+                </VBox>
+
+                <VBox spacing="5" maxWidth="400">
+                    <Label text="Tipo"/>
+                    <ComboBox fx:id="cbTipo"
+                              maxWidth="Infinity"/>
+                </VBox>
+
+                <VBox spacing="5" maxWidth="400">
+                    <Label text="Recorrência"/>
+                    <ComboBox fx:id="cbRecorrencia"
+                              maxWidth="Infinity"/>
+                </VBox>
+
+                <VBox spacing="5" maxWidth="400">
+                    <Label text="Categoria"/>
+                    <ComboBox fx:id="cbCategoria"
+                              promptText="Selecione uma categoria..."
+                              maxWidth="Infinity"/>
+                </VBox>
+
+                <VBox spacing="5" maxWidth="400">
+                    <Label text="Forma de Pagamento"/>
+                    <ComboBox fx:id="cbFormaPagamento"
+                              promptText="Selecione uma forma de pagamento..."
+                              maxWidth="Infinity"/>
+                </VBox>
+            </VBox>
+
+            <Button text="Salvar"
+                    prefWidth="400"
+                    prefHeight="40"
+                    onAction="#salvar"/>
+
+        </VBox>
+    </content>
+
+</ScrollPane>
