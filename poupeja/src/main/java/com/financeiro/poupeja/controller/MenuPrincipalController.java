@@ -15,7 +15,8 @@ import com.financeiro.poupeja.util.Sessao;
 @Component
 public class MenuPrincipalController {
 
-    private final SpringFXMLLoader fxmlLoader;
+    private static final String ERRO_NAVEGACAO = "Erro de Navegação";
+	private final SpringFXMLLoader fxmlLoader;
     private final Sessao sessao;
 
     public MenuPrincipalController(SpringFXMLLoader fxmlLoader, Sessao sessao) {
@@ -31,7 +32,7 @@ public class MenuPrincipalController {
             PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Login");
             PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
         } catch (IOException e) {
-            mostrarErro("Erro de Navegação", "Não foi possível carregar a tela de Login.");
+            mostrarErro(ERRO_NAVEGACAO, "Não foi possível carregar a tela de Login.");
         }
     }
 
@@ -53,7 +54,7 @@ public class MenuPrincipalController {
             PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
 
         } catch (IOException e) {
-            mostrarErro("Erro de Navegação", "Não foi possível carregar a tela de Formas de Pagamento.");
+            mostrarErro(ERRO_NAVEGACAO, "Não foi possível carregar a tela de Formas de Pagamento.");
         }
     }
 
@@ -64,7 +65,7 @@ public class MenuPrincipalController {
             PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Alertas");
             PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
         } catch (IOException e) {
-            mostrarErro("Erro de Navegação", "Não foi possível carregar a tela de Alertas.");
+            mostrarErro(ERRO_NAVEGACAO, "Não foi possível carregar a tela de Alertas.");
         }
     }
 

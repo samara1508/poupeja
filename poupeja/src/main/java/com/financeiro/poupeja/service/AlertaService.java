@@ -1,32 +1,59 @@
 package com.financeiro.poupeja.service;
 
-import com.financeiro.poupeja.entity.Alerta;
-import com.financeiro.poupeja.entity.Usuario;
-import com.financeiro.poupeja.repository.AlertaRepository;
-import com.financeiro.poupeja.util.Utils;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.concurrent.ScheduledFuture;
+
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
+import com.financeiro.poupeja.entity.Alerta;
+import com.financeiro.poupeja.entity.Usuario;
+import com.financeiro.poupeja.enumeration.StatusAlerta;
+import com.financeiro.poupeja.event.LoginEvent;
+import com.financeiro.poupeja.repository.AlertaRepository;
+import com.financeiro.poupeja.util.Utils;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class AlertaService {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private final AlertaRepository repository;
     private final AuthService authService;
+    private final JavaMailSender mailSender;
+    private final TaskScheduler taskScheduler;
+    private ScheduledFuture<?> agendamentoFuturo;
 
-    public AlertaService(AlertaRepository repository, AuthService authService) {
+    public AlertaService(AlertaRepository repository, AuthService authService, JavaMailSender mailSender, TaskScheduler taskScheduler) {
         this.repository = repository;
         this.authService = authService;
+        this.mailSender = mailSender;
+        this.taskScheduler = taskScheduler;
+    }
+
+    @EventListener
+    public void iniciarVerificacaoDeAlertas(LoginEvent event) {
+        Usuario usuario = event.getUsuario();
+        boolean temPendentes = repository.existsByUsuarioAndAtivoTrueAndStatus(usuario, StatusAlerta.PENDENTE);
+        
+        if (temPendentes && agendamentoFuturo == null) {
+            log.info("Alertas pendentes encontrados para o usuário logado. Iniciando agendamento (intervalo: 1min)...");
+            agendamentoFuturo = taskScheduler.scheduleAtFixedRate(this::verificarEDispararAlertasAgendados, Duration.ofMinutes(1));
+        }
     }
 
     public Page<Alerta> listarPorUsuario(String descricao, int pagina, int tamanho) {
@@ -69,24 +96,33 @@ public class AlertaService {
         repository.delete(alerta);
     }
 
-    @Scheduled(initialDelay = 10000, fixedRate = 30000)
-    @Transactional
+    @Transactional(readOnly = true)
     public void verificarEDispararAlertasAgendados() {
-        System.out.println("Iniciando verificação demonstrativa de alertas agendados (intervalo: 30s)...");
+        Usuario usuario = authService.getUsuarioLogado();
+        if (Utils.isEmpty(usuario)) return;
 
-        List<Alerta> alertasPendentes = repository.findByAtivoTrueAndStatus("PENDENTE");
+        List<Alerta> alertasPendentes = repository.findByUsuarioAndAtivoTrueAndStatus(usuario, StatusAlerta.PENDENTE);
+        
+        if (alertasPendentes.isEmpty()) {
+            if (agendamentoFuturo != null) {
+                agendamentoFuturo.cancel(false);
+                agendamentoFuturo = null;
+                log.warn("Sem mais alertas pendentes. Agendamento suspenso.");
+            }
+            return;
+        }
+
+        log.info("Verificando alertas agendados para o usuário logado...");
         LocalDate hoje = LocalDate.now();
 
         for (Alerta alerta : alertasPendentes) {
             try {
                 processar(alerta, hoje);
             } catch (Exception e) {
-                System.err.println("Erro ao processar alerta ID " + alerta.getId() + ": " + e.getMessage());
-                e.printStackTrace();
+            	log.error("Erro ao processar alerta ID " + alerta.getId() + ": " + e.getMessage(), e);
+                throw e;
             }
         }
-
-        System.out.println("Fim da verificação demonstrativa de alertas.");
     }
 
     private void validarDadosAlerta(String descricao, Integer diasAntes, LocalDate dataVencimento) {
@@ -110,40 +146,39 @@ public class AlertaService {
         }
 
         if (alerta.deveLancarAlerta(hoje)) {
-            simularEnvioEmail(alerta, hoje);
+            enviarEmail(alerta, hoje);
         }
     }
 
     private void marcarComoVencido(Alerta alerta) {
-        alerta.setStatus("CONCLUIDO");
+        alerta.setStatus(StatusAlerta.CONCLUIDO);
         alerta.setAtivo(false);
         
         repository.save(alerta);
         
-        System.out.println("Alerta ID " + alerta.getId() + " marcado como CONCLUIDO (vencimento ultrapassado).");
+        log.warn("Alerta ID " + alerta.getId() + " marcado como CONCLUIDO (vencimento ultrapassado).");
     }
 
-    private void simularEnvioEmail(Alerta alerta, LocalDate hoje) {
-        System.out.println("\n=== [MOCK EMAIL DISPATCH] ===");
-        System.out.println("Enviando e-mail para: " + alerta.getEmail());
-        System.out.println("Assunto: Alerta de Vencimento - PoupeJá!");
-        System.out.println("Conteúdo:");
-        System.out.println("--------------------------------------------------");
-        System.out.println("Atenção! Sua conta está prestes a vencer!");
-        System.out.println("Não esqueça de regularizar :)");
-        System.out.println("Data de vencimento: " + alerta.getDataVencimento().format(FORMATTER));
-        System.out.println("Descrição: " + alerta.getDescricao());
-        System.out.println();
-        System.out.println("Este email foi enviado automaticamente pelo sistema PoupeJá! e não precisa ser respondido.");
-        System.out.println("--------------------------------------------------");
-        System.out.println("==================================================\n");
+    private void enviarEmail(Alerta alerta, LocalDate hoje) {
+        log.info("Enviando e-mail para: " + alerta.getEmail());
+        
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(alerta.getEmail());
+        message.setSubject("Alerta de Vencimento - PoupeJá!");
+        message.setText("Atenção! Sua conta está prestes a vencer!\n" +
+                "Não esqueça de regularizar :)\n" +
+                "Data de vencimento: " + alerta.getDataVencimento().format(FORMATTER) + "\n" +
+                "Descrição: " + alerta.getDescricao() + "\n\n" +
+                "Este email foi enviado automaticamente pelo sistema PoupeJá! e não precisa ser respondido.");
+        
+        mailSender.send(message);
 
         alerta.setUltimaExecucao(hoje);
-        alerta.setStatus("ENVIADO");
+        alerta.setStatus(StatusAlerta.ENVIADO);
         alerta.setAtivo(false);
         
         repository.save(alerta);
         
-        System.out.println("Alerta ID " + alerta.getId() + " processado e marcado como ENVIADO no banco de dados.");
+        log.info("Alerta ID " + alerta.getId() + " processado e marcado como ENVIADO no banco de dados.");
     }
 }

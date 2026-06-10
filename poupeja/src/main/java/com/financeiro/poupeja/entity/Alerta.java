@@ -1,7 +1,19 @@
 package com.financeiro.poupeja.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.Objects;
+
+import com.financeiro.poupeja.enumeration.StatusAlerta;
+import com.financeiro.poupeja.util.Utils;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 
 @Entity
 public class Alerta {
@@ -22,7 +34,8 @@ public class Alerta {
     private String descricao;
     private LocalDate dataVencimento;
     private LocalDate dataCriacao = LocalDate.now();
-    private String status = "PENDENTE";
+    @Enumerated(EnumType.STRING)
+    private StatusAlerta status = StatusAlerta.PENDENTE;
 
     public Long getId() {
         return id;
@@ -96,49 +109,35 @@ public class Alerta {
         this.dataCriacao = dataCriacao;
     }
 
-    public String getStatus() {
+    public StatusAlerta getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusAlerta status) {
         this.status = status;
     }
 
-    // --- Métodos de negócio ---
-
-    /**
-     * Inicializa os campos padrão do alerta vinculando-o ao usuário logado.
-     */
     public void inicializar(Usuario usuario) {
         this.usuario = usuario;
         this.email = usuario.getEmail();
         this.ativo = true;
-        this.status = "PENDENTE";
+        this.status = StatusAlerta.PENDENTE;
         this.dataCriacao = LocalDate.now();
     }
 
-    /**
-     * Verifica se este alerta pertence ao usuário informado.
-     */
     public boolean pertenceA(Usuario usuario) {
-        return usuario != null
-                && this.usuario != null
-                && this.usuario.getId() != null
-                && this.usuario.getId().equals(usuario.getId());
+        if (Utils.isEmpty(this.usuario) || Utils.isEmpty(usuario)) {
+            return false;
+        }
+        return Objects.equals(this.usuario.getId(), usuario.getId());
     }
 
-    /**
-     * Verifica se a data de vencimento já foi ultrapassada sem disparo.
-     */
     public boolean estaVencido(LocalDate hoje) {
-        return dataVencimento != null && hoje.isAfter(dataVencimento);
+        return !Utils.isEmpty(dataVencimento) && hoje.isAfter(dataVencimento);
     }
 
-    /**
-     * Verifica se hoje é o momento de disparar o alerta (dataVencimento - diasAntes).
-     */
     public boolean deveLancarAlerta(LocalDate hoje) {
-        if (dataVencimento == null || diasAntes == null) return false;
+        if (!Utils.isEmpty(dataVencimento) || Utils.isEmpty(diasAntes)) return false;
         LocalDate dataDisparo = dataVencimento.minusDays(diasAntes);
         return !hoje.isBefore(dataDisparo);
     }

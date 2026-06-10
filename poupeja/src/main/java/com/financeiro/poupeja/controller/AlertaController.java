@@ -120,7 +120,7 @@ public class AlertaController {
 
         colStatus.setCellValueFactory(cellData -> {
             Alerta alerta = cellData.getValue();
-            String statusExibicao = alerta.getStatus();
+            String statusExibicao = alerta.getStatus() != null ? alerta.getStatus().getLabel() : "";
             if (alerta.getAtivo() != null) {
                 statusExibicao += Boolean.TRUE.equals(alerta.getAtivo()) ? " (Ativo)" : " (Inativo)";
             }

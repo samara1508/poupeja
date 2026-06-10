@@ -8,15 +8,20 @@ import com.financeiro.poupeja.repository.UsuarioRepository;
 import com.financeiro.poupeja.util.Sessao;
 import com.financeiro.poupeja.util.Utils;
 
+import org.springframework.context.ApplicationEventPublisher;
+import com.financeiro.poupeja.event.LoginEvent;
+
 @Service
 public class AuthService {
 
     private final UsuarioRepository usuarioRepository;
     private final Sessao sessao;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public AuthService(UsuarioRepository usuarioRepository, Sessao sessao) {
+    public AuthService(UsuarioRepository usuarioRepository, Sessao sessao, ApplicationEventPublisher eventPublisher) {
         this.usuarioRepository = usuarioRepository;
         this.sessao = sessao;
+        this.eventPublisher = eventPublisher;
     }
 
     public Usuario criarUsuario(String nome, String email, String senha, String confirmacaoSenha) {
@@ -46,6 +51,7 @@ public class AuthService {
         }
 
         sessao.login(usuario);
+        eventPublisher.publishEvent(new LoginEvent(usuario));
 
         return usuario;
     }
