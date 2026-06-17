@@ -37,6 +37,18 @@ public class MenuPrincipalController {
     }
 
     @FXML
+    public void abrirDashboard() {
+        try {
+            Parent root = fxmlLoader.load("/fxml/dashboard.fxml");
+            PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Dashboard");
+            PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
+        } catch (IOException e) {
+            mostrarErro(ERRO_NAVEGACAO, "Não foi possível carregar a tela do Dashboard.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     public void acaoNaoImplementada() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Em Construção");
