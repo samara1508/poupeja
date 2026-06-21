@@ -34,6 +34,7 @@ public class PoupejaApplication extends Application {
         Parent root = loader.load("/fxml/login.fxml");
         stage.setTitle("PoupeJá! - Login");
         stage.setScene(new Scene(root, 400, 500));
+        stage.setMaximized(true);
         stage.show();
     }
 

@@ -49,6 +49,18 @@ public class MenuPrincipalController {
     }
 
     @FXML
+    public void abrirTotaisFormaPagamento() {
+        try {
+            Parent root = fxmlLoader.load("/fxml/totais_forma_pagamento.fxml");
+            PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Totais por Forma de Pagamento");
+            PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
+        } catch (IOException e) {
+            mostrarErro(ERRO_NAVEGACAO, "Não foi possível carregar a tela de Totais por Forma de Pagamento.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     public void acaoNaoImplementada() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Em Construção");

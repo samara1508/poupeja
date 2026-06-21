@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
+import java.util.List;
 import java.util.Locale;
 
 import org.springframework.stereotype.Component;
@@ -111,17 +112,17 @@ public class DashboardController {
         lblTotalReceitas.setText(MOEDA_FORMATTER.format(dados.getTotalReceitas()));
         lblTotalDespesas.setText(MOEDA_FORMATTER.format(dados.getTotalDespesas()));
 
-        double totalGasto = dados.getCategorias().stream()
-                .mapToDouble(CategoriaDashboardDTO::getGastoRealizado)
-                .sum();
-        double totalMeta = dados.getCategorias().stream()
-                .mapToDouble(CategoriaDashboardDTO::getMeta)
-                .sum();
+        lblTotalGastoMeta.setText(MOEDA_FORMATTER.format(dados.getTotalDespesas()));
+        lblTotalMetaCategorias.setText(MOEDA_FORMATTER.format(dados.getTotalMetaUtilizada()));
 
-        lblTotalGastoMeta.setText(MOEDA_FORMATTER.format(totalGasto));
-        lblTotalMetaCategorias.setText(MOEDA_FORMATTER.format(totalMeta));
-
+        // Limpar o gráfico e atualizar os eixos
         chartGastos.getData().clear();
+        
+        List<String> categories = dados.getCategorias().stream()
+                .map(CategoriaDashboardDTO::getDescricao)
+                .toList();
+        xAxisCategorias.getCategories().clear();
+        xAxisCategorias.getCategories().addAll(categories);
 
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Gasto Realizado");
@@ -134,9 +135,9 @@ public class DashboardController {
                     double gasto = catDTO.getGastoRealizado();
                     double meta = catDTO.getMeta();
                     if (gasto > meta && meta > 0) {
-                        newNode.setStyle("-fx-bar-fill: #c62828;"); // Vermelho (Estouro da cota)
+                        newNode.setStyle("-fx-bar-fill: #c62828; -fx-background-color: #c62828;");
                     } else {
-                        newNode.setStyle("-fx-bar-fill: #002244;"); // Azul Marinho (Padrão)
+                        newNode.setStyle("-fx-bar-fill: #002244; -fx-background-color: #002244;");
                     }
                 }
             });

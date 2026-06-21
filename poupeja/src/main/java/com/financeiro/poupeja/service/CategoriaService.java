@@ -17,13 +17,14 @@ public class CategoriaService {
         this.categoriaRepository = categoriaRepository;
     }
 
-    public Categoria cadastrarCategoria(Long id, String descricao, double meta, boolean ativo) {
+    public Categoria cadastrarCategoria(Long id, String descricao, double meta, boolean ativo, Usuario usuario) {
 
         Categoria novaCategoria = new Categoria();
         novaCategoria.setId(id);
         novaCategoria.setDescricao(descricao);
         novaCategoria.setMeta(meta);
         novaCategoria.setAtivo(ativo);
+        novaCategoria.setUsuario(usuario);
 
         return categoriaRepository.save(novaCategoria);
     }

@@ -16,10 +16,8 @@
                 <Insets top="30" right="30" bottom="15" left="30"/>
             </padding>
 
-            <HBox alignment="TOP_LEFT" maxWidth="400">
-                <Button text="← Voltar para Menu"
-                        onAction="#voltarMenu"
-                        style="-fx-background-color: transparent; -fx-text-fill: #555;"/>
+            <HBox alignment="CENTER_LEFT" maxWidth="300">
+                <Hyperlink text="← Voltar para Menu" onAction="#voltarMenu" />
             </HBox>
 
             <Label text="Lançamentos">

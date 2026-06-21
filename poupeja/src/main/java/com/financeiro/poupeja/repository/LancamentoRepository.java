@@ -1,6 +1,7 @@
 package com.financeiro.poupeja.repository;
 
 import com.financeiro.poupeja.dto.CategoriaGastoDTO;
+import com.financeiro.poupeja.dto.FormaPagamentoRelatorioDTO;
 import com.financeiro.poupeja.entity.Lancamento;
 import com.financeiro.poupeja.entity.Usuario;
 import com.financeiro.poupeja.enumeration.TipoLancamento;
@@ -36,4 +37,11 @@ public interface LancamentoRepository extends JpaRepository<Lancamento, Long> {
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate
     );
+
+    @Query("SELECT new com.financeiro.poupeja.dto.FormaPagamentoRelatorioDTO(fp.descricao, SUM(l.valorTotal), COUNT(l.id)) " +
+           "FROM Lancamento l " +
+           "JOIN l.formaPagamento fp " +
+           "WHERE l.usuario = :usuario " +
+           "GROUP BY fp.id, fp.descricao")
+    List<FormaPagamentoRelatorioDTO> findTotaisByFormaPagamento(@Param("usuario") Usuario usuario);
 }

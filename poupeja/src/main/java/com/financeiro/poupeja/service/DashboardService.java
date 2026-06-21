@@ -49,7 +49,7 @@ public class DashboardService {
         List<Categoria> todasCategorias = categoriaService.listarPorUsuario(usuario);
         List<Categoria> categoriasVigentes = Utils.isEmpty(todasCategorias) ? List.of()
                 : todasCategorias.stream()
-                    .filter(c -> Utils.isEmpty(c.getAtivo()) || Boolean.FALSE.equals(c.getAtivo()))
+                    .filter(c -> !Boolean.FALSE.equals(c.getAtivo()))
                     .toList();
 
         List<CategoriaGastoDTO> gastosAgrupados = lancamentoRepository.sumValorTotalByUsuarioAndTipoAndDataBetweenGroupedByCategoria(
@@ -62,6 +62,15 @@ public class DashboardService {
             }
         }
 
+        Double totalMetaUtilizada = 0.0;
+        if (!Utils.isEmpty(todasCategorias)) {
+            for (Categoria cat : todasCategorias) {
+                if (mapGastos.containsKey(cat.getId())) {
+                    totalMetaUtilizada += cat.getMeta() != null ? cat.getMeta() : 0.0;
+                }
+            }
+        }
+
         List<CategoriaDashboardDTO> listCategoriasDTO = new ArrayList<>();
         for (Categoria cat : categoriasVigentes) {
             Double gasto = mapGastos.getOrDefault(cat.getId(), 0.0);
@@ -69,6 +78,6 @@ public class DashboardService {
             listCategoriasDTO.add(new CategoriaDashboardDTO(cat.getDescricao(), meta, gasto));
         }
 
-        return new DashboardDTO(totalReceitas, totalDespesas, listCategoriasDTO);
+        return new DashboardDTO(totalReceitas, totalDespesas, totalMetaUtilizada, listCategoriasDTO);
     }
 }
