@@ -19,10 +19,17 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.File;
+import java.io.InputStream;
 import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+
+import com.financeiro.poupeja.dto.FormaPagamentoExportDTO;
+import com.financeiro.poupeja.service.ExportacaoService;
+import javafx.stage.FileChooser;
 
 @Component
 public class TotaisFormaPagamentoController {
@@ -32,6 +39,7 @@ public class TotaisFormaPagamentoController {
 
     private final SpringFXMLLoader fxmlLoader;
     private final RelatorioService relatorioService;
+    private final ExportacaoService exportacaoPdfService;
 
     @FXML
     private TableView<FormaPagamentoRelatorioDTO> tabelaRelatorio;
@@ -58,9 +66,10 @@ public class TotaisFormaPagamentoController {
     private int totalPaginas = 1;
     private List<FormaPagamentoRelatorioDTO> todosDados;
 
-    public TotaisFormaPagamentoController(SpringFXMLLoader fxmlLoader, RelatorioService relatorioService) {
+    public TotaisFormaPagamentoController(SpringFXMLLoader fxmlLoader, RelatorioService relatorioService, ExportacaoService exportacaoPdfService) {
         this.fxmlLoader = fxmlLoader;
         this.relatorioService = relatorioService;
+        this.exportacaoPdfService = exportacaoPdfService;
     }
 
     @FXML
@@ -162,6 +171,70 @@ public class TotaisFormaPagamentoController {
         } catch (IOException e) {
             MessageUtils.erro("Nao foi possivel carregar a tela.");
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void exportarParaPDF() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Salvar Relatório de Totais por Forma de Pagamento");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Arquivos PDF (*.pdf)", "*.pdf"));
+        fileChooser.setInitialFileName("totais_forma_pagamento.pdf");
+        File file = fileChooser.showSaveDialog(PoupejaApplication.getPrimaryStage());
+        
+        if (!Utils.isEmpty(file)) {
+            try {
+                if (Utils.isEmpty(todosDados) || todosDados.isEmpty()) {
+                    MessageUtils.alerta("Não há dados para exportar.");
+                    return;
+                }
+                
+                List<FormaPagamentoExportDTO> dadosExport = todosDados.stream().map(d -> new FormaPagamentoExportDTO(
+                    d.getDescricaoFormaPagamento(),
+                    MOEDA_FORMATTER.format(d.getValorTotal()),
+                    String.valueOf(d.getQuantidadeLancamentos())
+                )).collect(Collectors.toList());
+                
+                try (InputStream reportStream = getClass().getResourceAsStream("/reports/totais_forma_pagamento.jrxml")) {
+                    exportacaoPdfService.exportarPdf(reportStream, dadosExport, file.getAbsolutePath());
+                    MessageUtils.sucesso("Relatório exportado com sucesso!");
+                }
+            } catch (Exception e) {
+                MessageUtils.erro("Erro ao exportar relatório: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    public void exportarParaExcel() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Salvar Relatório de Totais por Forma de Pagamento em Excel");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Arquivos Excel (*.xlsx)", "*.xlsx"));
+        fileChooser.setInitialFileName("totais_forma_pagamento.xlsx");
+        File file = fileChooser.showSaveDialog(PoupejaApplication.getPrimaryStage());
+        
+        if (!Utils.isEmpty(file)) {
+            try {
+                if (Utils.isEmpty(todosDados) || todosDados.isEmpty()) {
+                    MessageUtils.alerta("Não há dados para exportar.");
+                    return;
+                }
+                
+                List<FormaPagamentoExportDTO> dadosExport = todosDados.stream().map(d -> new FormaPagamentoExportDTO(
+                    d.getDescricaoFormaPagamento(),
+                    MOEDA_FORMATTER.format(d.getValorTotal()),
+                    String.valueOf(d.getQuantidadeLancamentos())
+                )).collect(Collectors.toList());
+                
+                try (InputStream reportStream = getClass().getResourceAsStream("/reports/totais_forma_pagamento.jrxml")) {
+                    exportacaoPdfService.exportarExcel(reportStream, dadosExport, file.getAbsolutePath());
+                    MessageUtils.sucesso("Relatório exportado com sucesso!");
+                }
+            } catch (Exception e) {
+                MessageUtils.erro("Erro ao exportar relatório: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 }

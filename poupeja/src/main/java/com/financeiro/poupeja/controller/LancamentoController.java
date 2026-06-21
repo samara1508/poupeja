@@ -6,6 +6,8 @@ import com.financeiro.poupeja.service.LancamentoService;
 import com.financeiro.poupeja.util.LancamentoEdicaoContext;
 import com.financeiro.poupeja.util.MessageUtils;
 import com.financeiro.poupeja.util.SpringFXMLLoader;
+import com.financeiro.poupeja.util.Utils;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -30,16 +32,24 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Optional;
 
+import com.financeiro.poupeja.dto.LancamentoExportDTO;
+import com.financeiro.poupeja.service.ExportacaoService;
+import javafx.stage.FileChooser;
+import java.io.File;
+import java.io.InputStream;
+import java.util.List;
+
 @Component
 public class LancamentoController {
 
     private static final int TAM_PAG = 5;
     private static final DateTimeFormatter DATA_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final NumberFormat MOEDA_FORMATTER = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+    private static final NumberFormat MOEDA_FORMATTER = NumberFormat.getCurrencyInstance(Locale.of("pt", "BR"));
 
     private final SpringFXMLLoader fxmlLoader;
     private final LancamentoService lancamentoService;
     private final LancamentoEdicaoContext lancamentoEdicaoContext;
+    private final ExportacaoService exportacaoPdfService;
 
     @FXML
     private TableView<Lancamento> tabelaLancamentos;
@@ -89,10 +99,12 @@ public class LancamentoController {
     public LancamentoController(
             SpringFXMLLoader fxmlLoader,
             LancamentoService lancamentoService,
-            LancamentoEdicaoContext lancamentoEdicaoContext) {
+            LancamentoEdicaoContext lancamentoEdicaoContext,
+            ExportacaoService exportacaoPdfService) {
         this.fxmlLoader = fxmlLoader;
         this.lancamentoService = lancamentoService;
         this.lancamentoEdicaoContext = lancamentoEdicaoContext;
+        this.exportacaoPdfService = exportacaoPdfService;
     }
 
     @FXML
@@ -219,6 +231,64 @@ public class LancamentoController {
         if (paginaAtual < totalPaginas - 1) {
             paginaAtual++;
             carregarDados();
+        }
+    }
+
+    @FXML
+    public void exportarParaPDF() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Salvar Relatório de Lançamentos");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Arquivos PDF (*.pdf)", "*.pdf"));
+        fileChooser.setInitialFileName("lancamentos.pdf");
+        
+        File file = fileChooser.showSaveDialog(PoupejaApplication.getPrimaryStage());
+        if (!Utils.isEmpty(file)) {
+            try {
+                String busca = !Utils.isEmpty(txtBusca.getText()) ? txtBusca.getText().trim() : "";
+                List<LancamentoExportDTO> dados = lancamentoService.obterLancamentosParaExportacao(busca);
+                
+                if (dados.isEmpty()) {
+                    MessageUtils.alerta("Não há lançamentos para exportar.");
+                    return;
+                }
+                
+                try (InputStream reportStream = getClass().getResourceAsStream("/reports/lancamentos.jrxml")) {
+                    exportacaoPdfService.exportarPdf(reportStream, dados, file.getAbsolutePath());
+                    MessageUtils.sucesso("Relatório exportado com sucesso!");
+                }
+            } catch (Exception e) {
+                MessageUtils.erro("Erro ao exportar relatório: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    public void exportarParaExcel() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Salvar Relatório de Lançamentos em Excel");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Arquivos Excel (*.xlsx)", "*.xlsx"));
+        fileChooser.setInitialFileName("lancamentos.xlsx");
+        
+        File file = fileChooser.showSaveDialog(PoupejaApplication.getPrimaryStage());
+        if (!Utils.isEmpty(file)) {
+            try {
+                String busca = !Utils.isEmpty(txtBusca.getText()) ? txtBusca.getText().trim() : "";
+                List<LancamentoExportDTO> dados = lancamentoService.obterLancamentosParaExportacao(busca);
+                
+                if (dados.isEmpty()) {
+                    MessageUtils.alerta("Não há lançamentos para exportar.");
+                    return;
+                }
+                
+                try (InputStream reportStream = getClass().getResourceAsStream("/reports/lancamentos.jrxml")) {
+                    exportacaoPdfService.exportarExcel(reportStream, dados, file.getAbsolutePath());
+                    MessageUtils.sucesso("Relatório exportado com sucesso!");
+                }
+            } catch (Exception e) {
+                MessageUtils.erro("Erro ao exportar relatório: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 

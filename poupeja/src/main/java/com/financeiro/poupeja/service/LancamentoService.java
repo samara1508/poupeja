@@ -16,9 +16,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.financeiro.poupeja.dto.LancamentoExportDTO;
+import java.text.NumberFormat;
+import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
 public class LancamentoService {
@@ -40,6 +45,42 @@ public class LancamentoService {
         }
 
         return repository.findByUsuario(usuario, pageable);
+    }
+
+    public List<LancamentoExportDTO> obterLancamentosParaExportacao(String descricao) {
+        Usuario usuario = authService.getUsuarioLogado();
+        List<Lancamento> lancamentos;
+        if (!Utils.isEmpty(descricao)) {
+            lancamentos = repository.findByUsuarioAndDescricaoContainingIgnoreCase(usuario, descricao);
+        } else {
+            lancamentos = repository.findByUsuario(usuario);
+        }
+
+        DateTimeFormatter dataFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        NumberFormat moedaFormatter = NumberFormat.getCurrencyInstance(Locale.of("pt", "BR"));
+
+        return lancamentos.stream().map(l -> {
+            String valorFormatado = !Utils.isEmpty(l.getValorTotal()) ? moedaFormatter.format(l.getValorTotal()) : "-";
+            String dataFormatada = !Utils.isEmpty(l.getData()) ? l.getData().format(dataFormatter) : "-";
+            String categoriaDesc = !Utils.isEmpty(l.getCategoria()) ? l.getCategoria().getDescricao() : "-";
+            String formaPagamentoDesc = !Utils.isEmpty(l.getFormaPagamento()) ? l.getFormaPagamento().getDescricao() : "-";
+            String tipoLabel = !Utils.isEmpty(l.getTipo()) ? l.getTipo().name() : "-";
+            String recorrenciaLabel = !Utils.isEmpty(l.getRecorrencia())? l.getRecorrencia().name() : "-";
+            
+            int totalParcelas = Utils.isEmpty(l.getParcelas()) ? 0 : l.getParcelas().size();
+            String parcelasLabel = String.valueOf(totalParcelas);
+
+            return new LancamentoExportDTO(
+                l.getDescricao(),
+                tipoLabel,
+                valorFormatado,
+                dataFormatada,
+                categoriaDesc,
+                formaPagamentoDesc,
+                recorrenciaLabel,
+                parcelasLabel
+            );
+        }).collect(Collectors.toList());
     }
 
     public Lancamento buscarPorIdDoUsuario(Long id) {

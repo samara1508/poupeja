@@ -57,4 +57,18 @@
         </VBox>
     </center>
 
+    <bottom>
+        <HBox alignment="CENTER" spacing="10">
+            <padding>
+                <Insets top="10" right="30" bottom="30" left="30"/>
+            </padding>
+            <Button text="Exportar para PDF"
+                    prefHeight="45"
+                    onAction="#exportarParaPDF"/>
+            <Button text="Exportar para Excel"
+                    prefHeight="45"
+                    onAction="#exportarParaExcel"/>
+            <Pane HBox.hgrow="ALWAYS" />
+        </HBox>
+    </bottom>
 </BorderPane>
