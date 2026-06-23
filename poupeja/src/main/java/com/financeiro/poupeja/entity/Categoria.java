@@ -17,6 +17,16 @@ public class Categoria {
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
+    public Categoria() {}
+
+    public Categoria(Long id, String descricao, double meta, boolean ativo, Usuario usuario) {
+        this.id = id;
+        this.descricao = descricao;
+        this.meta = meta;
+        this.ativo = ativo;
+        this.usuario = usuario;
+    }
+
     public Long getId() {
         return id;
     }
