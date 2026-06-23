@@ -1,24 +1,29 @@
 package com.financeiro.poupeja.controller;
 
+import java.io.IOException;
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import com.financeiro.poupeja.PoupejaApplication;
 import com.financeiro.poupeja.entity.Categoria;
 import com.financeiro.poupeja.entity.Usuario;
+import com.financeiro.poupeja.service.AuthService;
+import com.financeiro.poupeja.service.CategoriaService;
+import com.financeiro.poupeja.util.MessageUtils;
 import com.financeiro.poupeja.util.SpringFXMLLoader;
+
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import com.financeiro.poupeja.util.MessageUtils;
-import org.springframework.stereotype.Component;
-import java.io.IOException;
-import com.financeiro.poupeja.service.CategoriaService;
-import com.financeiro.poupeja.service.AuthService;
-import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-
-import java.util.List;
 
 
 @Component
@@ -192,8 +197,8 @@ public class VisualizacaoCategoriaController {
     @FXML
     public void voltarParaMenu() {
         try {
-            Parent root = fxmlLoader.load("/fxml/login.fxml");
-            PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Login");
+            Parent root = fxmlLoader.load("/fxml/menu_principal.fxml");
+            PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Menu Principal");
             PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
         } catch (IOException e) {
             MessageUtils.erro("Não foi possível carregar a tela de Login.");
