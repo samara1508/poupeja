@@ -3,6 +3,7 @@ package com.financeiro.poupeja.service;
 import org.springframework.stereotype.Service;
 
 import com.financeiro.poupeja.entity.Categoria;
+import com.financeiro.poupeja.entity.FormaPagamento;
 import com.financeiro.poupeja.entity.Usuario;
 import com.financeiro.poupeja.repository.CategoriaRepository;
 
@@ -17,19 +18,31 @@ public class CategoriaService {
         this.categoriaRepository = categoriaRepository;
     }
 
-    public Categoria cadastrarCategoria(Long id, String descricao, double meta, boolean ativo, Usuario usuario) {
 
-        Categoria novaCategoria = new Categoria();
-        novaCategoria.setId(id);
-        novaCategoria.setDescricao(descricao);
-        novaCategoria.setMeta(meta);
-        novaCategoria.setAtivo(ativo);
-        novaCategoria.setUsuario(usuario);
+    public void criarCategoria(Long id, String descricao, double meta, boolean ativo, Usuario usuario) {
 
-        return categoriaRepository.save(novaCategoria);
+        if (descricao == null || descricao.isBlank()) {
+            throw new IllegalArgumentException(
+                    "O nome da categoria é obrigatório.");
+        }
+
+        if (categoriaRepository.existsByDescricao(descricao)) {
+            throw new IllegalArgumentException(
+                    "Já existe uma categoria com essa descrição.");
+        }
+
+        Categoria categoria =
+                new Categoria(id, descricao, meta, ativo, usuario);
+
+        categoriaRepository.save(categoria);
     }
 
     public List<Categoria> listarPorUsuario(Usuario usuario) {
-        return categoriaRepository.findByUsuarioOrUsuarioIsNull(usuario);
+        return categoriaRepository.findByUsuario(usuario);
     }
+
+    public Categoria salvar(Categoria categoria) {
+        return categoriaRepository.save(categoria);
+    }
+
 }
