@@ -5,18 +5,83 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="15.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.financeiro.poupeja.controller.VisualizacaoCategoriaController">
-    <padding>
-        <Insets bottom="40.0" left="40.0" right="40.0" top="20.0" />
-    </padding>
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.financeiro.poupeja.controller.VisualizacaoCategoriaController"
+            style="-fx-background-color: #F5F5F5;">
 
-    <HBox alignment="CENTER_LEFT" maxWidth="300">
-        <Hyperlink text="← Voltar para Login" onAction="#voltarParaLogin" />
-    </HBox>
+    <!-- TOPO -->
+    <top>
 
-    <Button text="Criar Categoria" onAction="#cadastrarCategoria" prefWidth="300" prefHeight="40">
-        <VBox.margin>
-            <Insets top="10.0" />
-        </VBox.margin>
-    </Button>
-</VBox>
+        <VBox alignment="TOP_CENTER" spacing="20">
+
+            <padding>
+                <Insets top="30" right="30" bottom="20" left="30"/>
+            </padding>
+
+            <!-- Botão voltar -->
+            <HBox alignment="TOP_LEFT" maxWidth="400">
+
+                <Button text="← Voltar para Menu"
+                        onAction="#voltarParaMenu"
+                        style="-fx-background-color: transparent;
+                               -fx-text-fill: #555;"/>
+
+            </HBox>
+
+            <!-- Título -->
+            <Label text="Listagem de Categorias">
+
+                <font>
+                    <Font size="22"/>
+                </font>
+
+            </Label>
+
+        </VBox>
+
+    </top>
+
+    <!-- CENTRO -->
+    <center>
+
+        <ScrollPane fitToWidth="true"
+                    style="-fx-background-color: transparent;">
+
+            <content>
+
+                <VBox fx:id="containerCategorias"
+                      spacing="15"
+                      alignment="TOP_CENTER">
+
+                    <padding>
+                        <Insets right="30" left="30" bottom="20"/>
+                    </padding>
+
+                </VBox>
+
+            </content>
+
+        </ScrollPane>
+
+    </center>
+
+    <!-- RODAPÉ FIXO -->
+    <bottom>
+
+        <VBox alignment="CENTER">
+
+            <padding>
+                <Insets top="15" right="30" bottom="30" left="30"/>
+            </padding>
+
+            <Button text="Criar Nova Categoria"
+                    prefHeight="45"
+                    maxWidth="400"
+                    onAction="#cadastrarCategoria"/>
+
+        </VBox>
+
+    </bottom>
+
+</BorderPane>
