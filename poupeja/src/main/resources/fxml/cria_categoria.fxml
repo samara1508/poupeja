@@ -25,7 +25,7 @@
 
     <VBox spacing="5.0" maxWidth="300">
         <Label text="Nome" />
-        <TextField fx:id="txtNome" promptText="Digite o Nome da Categoria" />
+        <TextField fx:id="txtDescricao" promptText="Digite o Nome da Categoria" />
     </VBox>
 
     <VBox spacing="5.0" maxWidth="300">
@@ -33,9 +33,14 @@
         <TextField fx:id="txtLimite" promptText="Digite o Valor Limite da Categoria" />
     </VBox>
 
-    <Button text="Criar Categoria" onAction="#criaCategoria" prefWidth="300" prefHeight="40">
+    <CheckBox fx:id="chkAtivo"
+              text="Forma de pagamento ativa"
+              selected="true"/>
+              
+    <Button text="Criar Categoria" onAction="#salvar" prefWidth="300" prefHeight="40">
         <VBox.margin>
             <Insets top="10.0" />
         </VBox.margin>
     </Button>
 </VBox>
+
