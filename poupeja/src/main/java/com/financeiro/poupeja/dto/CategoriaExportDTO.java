@@ -2,13 +2,15 @@ package com.financeiro.poupeja.dto;
 
 public class CategoriaExportDTO {
     private String descricaoFormaPagamento;
+    private String metaMensal;
     private String valorTotal;
     private String quantidadeLancamentos;
 
     public CategoriaExportDTO() {}
 
-    public CategoriaExportDTO(String descricaoFormaPagamento, String valorTotal, String quantidadeLancamentos) {
+    public CategoriaExportDTO(String descricaoFormaPagamento, String metaMensal, String valorTotal, String quantidadeLancamentos) {
         this.descricaoFormaPagamento = descricaoFormaPagamento;
+        this.metaMensal = metaMensal;
         this.valorTotal = valorTotal;
         this.quantidadeLancamentos = quantidadeLancamentos;
     }
@@ -19,6 +21,14 @@ public class CategoriaExportDTO {
 
     public void setDescricaoFormaPagamento(String descricaoFormaPagamento) {
         this.descricaoFormaPagamento = descricaoFormaPagamento;
+    }
+
+    public String getMetaMensal() {
+        return metaMensal;
+    }
+
+    public void setMetaMensal(String metaMensal) {
+        this.metaMensal = metaMensal;
     }
 
     public String getValorTotal() {

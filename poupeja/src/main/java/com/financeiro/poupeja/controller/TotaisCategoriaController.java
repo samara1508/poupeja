@@ -49,6 +49,9 @@ public class TotaisCategoriaController {
     private TableColumn<CategoriaRelatorioDTO, String> colCategoria;
 
     @FXML
+    private TableColumn<CategoriaRelatorioDTO, Double> colMeta;
+
+    @FXML
     private TableColumn<CategoriaRelatorioDTO, Double> colValor;
 
     @FXML
@@ -85,6 +88,19 @@ public class TotaisCategoriaController {
     private void configurarColunas() {
         colCategoria.setCellValueFactory(new PropertyValueFactory<>("descricaoCategoria"));
         
+        colMeta.setCellValueFactory(new PropertyValueFactory<>("meta"));
+        colMeta.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(MOEDA_FORMATTER.format(item));
+                }
+            }
+        });
+
         colValor.setCellValueFactory(new PropertyValueFactory<>("valorTotal"));
         colValor.setCellFactory(column -> new TableCell<>() {
             @Override
@@ -195,6 +211,7 @@ public class TotaisCategoriaController {
                 
                 List<CategoriaExportDTO> dadosExport = todosDados.stream().map(d -> new CategoriaExportDTO(
                     d.getDescricaoCategoria(),
+                    MOEDA_FORMATTER.format(d.getMeta()),
                     MOEDA_FORMATTER.format(d.getValorTotal()),
                     String.valueOf(d.getQuantidadeLancamentos())
                 )).collect(Collectors.toList());
@@ -227,6 +244,7 @@ public class TotaisCategoriaController {
                 
                 List<CategoriaExportDTO> dadosExport = todosDados.stream().map(d -> new CategoriaExportDTO(
                     d.getDescricaoCategoria(),
+                    MOEDA_FORMATTER.format(d.getMeta()),
                     MOEDA_FORMATTER.format(d.getValorTotal()),
                     String.valueOf(d.getQuantidadeLancamentos())
                 )).collect(Collectors.toList());

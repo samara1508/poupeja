@@ -29,8 +29,8 @@
     </VBox>
 
     <VBox spacing="5.0" maxWidth="300">
-        <Label text="Limite" />
-        <TextField fx:id="txtLimite" promptText="Digite o Valor Limite da Categoria" />
+        <Label text="Meta mensal" />
+        <TextField fx:id="txtLimite" promptText="Digite a Meta mensal da Categoria" />
     </VBox>
 
     <CheckBox fx:id="chkAtivo"
