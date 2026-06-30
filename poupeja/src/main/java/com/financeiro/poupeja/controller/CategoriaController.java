@@ -30,6 +30,8 @@ import javafx.scene.layout.VBox;
 @Component
 public class CategoriaController {
 
+    private static final java.text.NumberFormat MOEDA_FORMATTER = java.text.NumberFormat.getCurrencyInstance(java.util.Locale.of("pt", "BR"));
+
     private final SpringFXMLLoader fxmlLoader;
 
     private CategoriaService categoriaService;
@@ -73,7 +75,7 @@ public class CategoriaController {
 
         linha.setPrefHeight(50);
 
-        linha.setMaxWidth(400);
+        linha.setMaxWidth(500);
 
         linha.setStyle(
                 "-fx-background-color: #F4F4F4;" +
@@ -90,6 +92,13 @@ public class CategoriaController {
 
         HBox.setHgrow(lblNome, Priority.ALWAYS);
 
+        Label lblMeta = new Label("Meta: " + MOEDA_FORMATTER.format(categoria.getMeta() != null ? categoria.getMeta() : 0.0));
+        lblMeta.setStyle(
+                "-fx-font-size: 13px;" +
+                "-fx-text-fill: #666666;"
+        );
+        lblMeta.setPrefWidth(120);
+
         CheckBox chkAtivo = criarCheckBoxAtivo(categoria);
 
         chkAtivo.setMinWidth(80);
@@ -98,7 +107,7 @@ public class CategoriaController {
                 "-fx-font-size: 13px;"
         );
 
-        linha.getChildren().addAll(lblNome, chkAtivo);
+        linha.getChildren().addAll(lblNome, lblMeta, chkAtivo);
 
         return linha;
     }

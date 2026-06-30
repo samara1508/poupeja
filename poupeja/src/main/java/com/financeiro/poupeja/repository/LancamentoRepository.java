@@ -50,10 +50,10 @@ public interface LancamentoRepository extends JpaRepository<Lancamento, Long> {
            "GROUP BY fp.id, fp.descricao")
     List<FormaPagamentoRelatorioDTO> findTotaisByFormaPagamento(@Param("usuario") Usuario usuario);
 
-    @Query("SELECT new com.financeiro.poupeja.dto.CategoriaRelatorioDTO(c.descricao, SUM(l.valorTotal), COUNT(l.id)) " +
+    @Query("SELECT new com.financeiro.poupeja.dto.CategoriaRelatorioDTO(c.descricao, c.meta, SUM(l.valorTotal), COUNT(l.id)) " +
            "FROM Lancamento l " +
            "JOIN l.categoria c " +
            "WHERE l.usuario = :usuario " +
-           "GROUP BY c.id, c.descricao")
+           "GROUP BY c.id, c.descricao, c.meta")
     List<CategoriaRelatorioDTO> findTotaisByCategoria(@Param("usuario") Usuario usuario);
 }
