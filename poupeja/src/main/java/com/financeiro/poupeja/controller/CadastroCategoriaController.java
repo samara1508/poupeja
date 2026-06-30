@@ -63,8 +63,8 @@ public class CadastroCategoriaController {
     @FXML
     public void voltarParaCategorias() {
         try {
-            Parent root = fxmlLoader.load("/fxml/lista_categoria.fxml");
-            PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Login");
+            Parent root = fxmlLoader.load("/fxml/categoria.fxml");
+            PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Categorias");
             PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
         } catch (IOException e) {
             MessageUtils.erro("Não Foi Possível Carregar a Tela de Categorias.");
@@ -132,8 +132,8 @@ public class CadastroCategoriaController {
     @FXML
     public void voltar() {
 
-        navegarPara("/fxml/lista_categoria.fxml",
-                "PoupeJá! - Listagem de Categorias");
+        navegarPara("/fxml/categoria.fxml",
+                "PoupeJá! - Categorias");
     }
 
     private void navegarPara(String fxmlPath, String titulo) {

@@ -61,6 +61,18 @@ public class MenuPrincipalController {
     }
 
     @FXML
+    public void abrirTotaisCategoria() {
+        try {
+            Parent root = fxmlLoader.load("/fxml/totais_categoria.fxml");
+            PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Totais por Categoria");
+            PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
+        } catch (IOException e) {
+            mostrarErro(ERRO_NAVEGACAO, "Não foi possível carregar a tela de Totais por Categoria.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     public void acaoNaoImplementada() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Em Construção");
@@ -105,9 +117,9 @@ public class MenuPrincipalController {
     }
 
     @FXML
-    public void listarCategorias() {
+    public void abrirCategorias() {
         try {
-            Parent root = fxmlLoader.load("/fxml/lista_categoria.fxml");
+            Parent root = fxmlLoader.load("/fxml/categoria.fxml");
             PoupejaApplication.getPrimaryStage().setTitle("PoupeJá! - Categorias");
             PoupejaApplication.getPrimaryStage().getScene().setRoot(root);
         } catch (IOException e) {

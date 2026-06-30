@@ -1,6 +1,7 @@
 package com.financeiro.poupeja.service;
 
 import com.financeiro.poupeja.dto.FormaPagamentoRelatorioDTO;
+import com.financeiro.poupeja.dto.CategoriaRelatorioDTO;
 import com.financeiro.poupeja.entity.Usuario;
 import com.financeiro.poupeja.repository.LancamentoRepository;
 import com.financeiro.poupeja.util.Utils;
@@ -25,5 +26,13 @@ public class RelatorioService {
             throw new IllegalArgumentException("Usuário precisa estar logado para acessar o relatório.");
         }
         return lancamentoRepository.findTotaisByFormaPagamento(usuario);
+    }
+
+    public List<CategoriaRelatorioDTO> obterRelatorioCategoria() {
+        Usuario usuario = authService.getUsuarioLogado();
+        if (Utils.isEmpty(usuario)) {
+            throw new IllegalArgumentException("Usuário precisa estar logado para acessar o relatório.");
+        }
+        return lancamentoRepository.findTotaisByCategoria(usuario);
     }
 }

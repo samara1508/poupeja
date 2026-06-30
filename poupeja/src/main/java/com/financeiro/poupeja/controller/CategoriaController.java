@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.financeiro.poupeja.PoupejaApplication;
 import com.financeiro.poupeja.entity.Categoria;
+import com.financeiro.poupeja.entity.FormaPagamento;
 import com.financeiro.poupeja.entity.Usuario;
 import com.financeiro.poupeja.service.AuthService;
 import com.financeiro.poupeja.service.CategoriaService;
@@ -27,7 +28,7 @@ import javafx.scene.layout.VBox;
 
 
 @Component
-public class VisualizacaoCategoriaController {
+public class CategoriaController {
 
     private final SpringFXMLLoader fxmlLoader;
 
@@ -38,7 +39,7 @@ public class VisualizacaoCategoriaController {
     @FXML
     private VBox containerCategorias;
 
-    public VisualizacaoCategoriaController(SpringFXMLLoader fxmlLoader, CategoriaService categoriaService, AuthService authService){
+    public CategoriaController(SpringFXMLLoader fxmlLoader, CategoriaService categoriaService, AuthService authService){
         this.categoriaService = categoriaService;
         this.fxmlLoader = fxmlLoader;
         this.authService = authService;
@@ -89,7 +90,7 @@ public class VisualizacaoCategoriaController {
 
         HBox.setHgrow(lblNome, Priority.ALWAYS);
 
-        CheckBox chkAtivo = new CheckBox("Ativo");
+        CheckBox chkAtivo = criarCheckBoxAtivo(categoria);
 
         chkAtivo.setMinWidth(80);
 
@@ -114,24 +115,24 @@ public class VisualizacaoCategoriaController {
         return lblNome;
     }
 
-    // private CheckBox criarCheckBoxAtivo(Categoria categoria) {
+    private CheckBox criarCheckBoxAtivo(Categoria categoria) {
 
-    //     CheckBox chkAtivo = new CheckBox("Ativo");
+        CheckBox chkAtivo = new CheckBox("Ativo");
 
-    //     chkAtivo.setSelected(categoria.getAtivo());
+        chkAtivo.setSelected(categoria.getAtivo());
 
-    //     chkAtivo.setOnAction(event -> {
+        chkAtivo.setOnAction(event -> {
 
-    //         categoria.setAtivo(chkAtivo.isSelected());
+            categoria.setAtivo(chkAtivo.isSelected());
 
-    //         categoriaService.salvar(categoria);
+            categoriaService.salvar(categoria);
 
-    //         System.out.println(
-    //                 "Atualizou ativo: " + categoria.getDescricao());
-    //     });
+            System.out.println(
+                    "Atualizou ativo: " + categoria.getDescricao());
+        });
 
-    //     return chkAtivo;
-    // }
+        return chkAtivo;
+    }
 
     private void configurarEdicaoNome(
             Label lblNome,
@@ -207,7 +208,7 @@ public class VisualizacaoCategoriaController {
 
     @FXML
     public void cadastrarCategoria() {
-        navegarPara("/fxml/cria_categoria.fxml",
+        navegarPara("/fxml/cadastro_categoria.fxml",
                 "PoupeJá! - Nova Categoria");
     }
 

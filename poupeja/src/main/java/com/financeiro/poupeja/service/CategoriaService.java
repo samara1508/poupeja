@@ -3,7 +3,6 @@ package com.financeiro.poupeja.service;
 import org.springframework.stereotype.Service;
 
 import com.financeiro.poupeja.entity.Categoria;
-import com.financeiro.poupeja.entity.FormaPagamento;
 import com.financeiro.poupeja.entity.Usuario;
 import com.financeiro.poupeja.repository.CategoriaRepository;
 

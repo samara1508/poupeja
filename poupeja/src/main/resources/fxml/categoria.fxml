@@ -7,7 +7,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.financeiro.poupeja.controller.VisualizacaoCategoriaController"
+            fx:controller="com.financeiro.poupeja.controller.CategoriaController"
             style="-fx-background-color: #F5F5F5;">
 
     <!-- TOPO -->
