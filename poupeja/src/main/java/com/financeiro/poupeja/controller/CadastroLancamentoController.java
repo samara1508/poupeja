@@ -86,8 +86,8 @@ public class CadastroLancamentoController {
 
         cbTipo.setItems(FXCollections.observableArrayList(TipoLancamento.values()));
         cbRecorrencia.setItems(FXCollections.observableArrayList(TipoRecorrencia.values()));
-        cbCategoria.setItems(FXCollections.observableArrayList(categoriaService.listarPorUsuario(usuario)));
-        cbFormaPagamento.setItems(FXCollections.observableArrayList(formaPagamentoService.listarPorUsuario(usuario)));
+        cbCategoria.setItems(FXCollections.observableArrayList(categoriaService.listarAtivasPorUsuario(usuario)));
+        cbFormaPagamento.setItems(FXCollections.observableArrayList(formaPagamentoService.listarAtivasPorUsuario(usuario)));
 
         cbTipo.setValue(TipoLancamento.DESPESA);
         cbRecorrencia.setValue(TipoRecorrencia.VARIAVEL);

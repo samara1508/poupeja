@@ -18,4 +18,6 @@ public interface FormaPagamentoRepository
     boolean existsByDescricao(String descricao);
 
     List<FormaPagamento> findByUsuario(Usuario usuario);
+
+    List<FormaPagamento> findByUsuarioAndAtivoTrue(Usuario usuario);
 }
