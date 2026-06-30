@@ -27,6 +27,8 @@ public interface LancamentoRepository extends JpaRepository<Lancamento, Long> {
 
     List<Lancamento> findByUsuario(Usuario usuario);
 
+    List<Lancamento> findByUsuarioOrderByDataDesc(Usuario usuario);
+
     @Query("SELECT SUM(l.valorTotal) FROM Lancamento l WHERE l.usuario = :usuario AND l.tipo = :tipo AND l.data BETWEEN :startDate AND :endDate")
     Double sumValorTotalByUsuarioAndTipoAndDataBetween(
         @Param("usuario") Usuario usuario,

@@ -11,13 +11,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.financeiro.poupeja.entity.Alerta;
+import com.financeiro.poupeja.entity.Lancamento;
 import com.financeiro.poupeja.entity.Usuario;
 import com.financeiro.poupeja.enumeration.StatusAlerta;
 import com.financeiro.poupeja.event.LoginEvent;
@@ -34,14 +33,14 @@ public class AlertaService {
 
     private final AlertaRepository repository;
     private final AuthService authService;
-    private final JavaMailSender mailSender;
+    private final EmailService emailService;
     private final TaskScheduler taskScheduler;
     private ScheduledFuture<?> agendamentoFuturo;
 
-    public AlertaService(AlertaRepository repository, AuthService authService, JavaMailSender mailSender, TaskScheduler taskScheduler) {
+    public AlertaService(AlertaRepository repository, AuthService authService, EmailService emailService, TaskScheduler taskScheduler) {
         this.repository = repository;
         this.authService = authService;
-        this.mailSender = mailSender;
+        this.emailService = emailService;
         this.taskScheduler = taskScheduler;
     }
 
@@ -68,8 +67,8 @@ public class AlertaService {
     }
 
     @Transactional
-    public void criarAlerta(String descricao, Integer diasAntes, LocalDate dataVencimento) {
-        validarDadosAlerta(descricao, diasAntes, dataVencimento);
+    public void criarAlerta(String descricao, Integer diasAntes, LocalDate dataVencimento, Lancamento lancamento) {
+        validarDadosAlerta(descricao, diasAntes, dataVencimento, lancamento);
 
         Usuario usuario = authService.getUsuarioLogado();
 
@@ -77,9 +76,15 @@ public class AlertaService {
         alerta.setDescricao(descricao);
         alerta.setDiasAntes(diasAntes);
         alerta.setDataVencimento(dataVencimento);
+        alerta.setLancamento(lancamento);
         alerta.inicializar(usuario);
 
         repository.save(alerta);
+
+        if (agendamentoFuturo == null) {
+            log.info("Novo alerta pendente cadastrado. Iniciando agendamento periódico...");
+            agendamentoFuturo = taskScheduler.scheduleAtFixedRate(this::verificarEDispararAlertasAgendados, Duration.ofMinutes(1));
+        }
     }
 
     @Transactional
@@ -99,7 +104,14 @@ public class AlertaService {
     @Transactional(readOnly = true)
     public void verificarEDispararAlertasAgendados() {
         Usuario usuario = authService.getUsuarioLogado();
-        if (Utils.isEmpty(usuario)) return;
+        if (Utils.isEmpty(usuario)) {
+            if (agendamentoFuturo != null) {
+                agendamentoFuturo.cancel(false);
+                agendamentoFuturo = null;
+                log.warn("Nenhum usuário logado. Agendamento suspenso.");
+            }
+            return;
+        }
 
         List<Alerta> alertasPendentes = repository.findByUsuarioAndAtivoTrueAndStatus(usuario, StatusAlerta.PENDENTE);
         
@@ -125,7 +137,7 @@ public class AlertaService {
         }
     }
 
-    private void validarDadosAlerta(String descricao, Integer diasAntes, LocalDate dataVencimento) {
+    private void validarDadosAlerta(String descricao, Integer diasAntes, LocalDate dataVencimento, Lancamento lancamento) {
         if (Utils.isEmpty(descricao)) {
             throw new IllegalArgumentException("A descrição é obrigatória.");
         }
@@ -134,6 +146,9 @@ public class AlertaService {
         }
         if (Utils.isEmpty(dataVencimento)) {
             throw new IllegalArgumentException("A data de vencimento é obrigatória.");
+        }
+        if (Utils.isEmpty(lancamento)) {
+            throw new IllegalArgumentException("O lançamento é obrigatório.");
         }
     }
 
@@ -162,16 +177,14 @@ public class AlertaService {
     private void enviarEmail(Alerta alerta, LocalDate hoje) {
         log.info("Enviando e-mail para: " + alerta.getEmail());
         
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(alerta.getEmail());
-        message.setSubject("Alerta de Vencimento - PoupeJá!");
-        message.setText("Atenção! Sua conta está prestes a vencer!\n" +
+        String assunto = "Alerta de Vencimento - PoupeJá!";
+        String texto = "Atenção! Sua conta está prestes a vencer!\n" +
                 "Não esqueça de regularizar :)\n" +
                 "Data de vencimento: " + alerta.getDataVencimento().format(FORMATTER) + "\n" +
                 "Descrição: " + alerta.getDescricao() + "\n\n" +
-                "Este email foi enviado automaticamente pelo sistema PoupeJá! e não precisa ser respondido.");
+                "Este email foi enviado automaticamente pelo sistema PoupeJá! e não precisa ser respondido.";
         
-        mailSender.send(message);
+        emailService.enviarEmailAlerta(alerta.getEmail(), assunto, texto);
 
         alerta.setUltimaExecucao(hoje);
         alerta.setStatus(StatusAlerta.ENVIADO);

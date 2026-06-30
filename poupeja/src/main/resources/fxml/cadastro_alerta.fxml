@@ -29,6 +29,14 @@
     <VBox spacing="15" maxWidth="400">
 
         <VBox spacing="5" maxWidth="400">
+            <Label text="Lançamento"/>
+            <ComboBox fx:id="cbLancamento"
+                      promptText="Selecione um lançamento..."
+                      maxWidth="Infinity"
+                      onAction="#onLancamentoSelecionado"/>
+        </VBox>
+
+        <VBox spacing="5" maxWidth="400">
             <Label text="Descrição da Conta / Despesa"/>
             <TextField fx:id="txtDescricao"
                        promptText="Ex: Conta de Luz, Parcela do Carro..."/>

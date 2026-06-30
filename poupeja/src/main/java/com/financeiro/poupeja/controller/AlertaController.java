@@ -42,6 +42,9 @@ public class AlertaController {
     private TableColumn<Alerta, String> colDescricao;
 
     @FXML
+    private TableColumn<Alerta, String> colLancamento;
+
+    @FXML
     private TableColumn<Alerta, Integer> colDiasAntes;
 
     @FXML
@@ -87,6 +90,11 @@ public class AlertaController {
 
     private void configurarColunas() {
         colDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao"));
+        colLancamento.setCellValueFactory(cellData -> {
+            Alerta alerta = cellData.getValue();
+            String descLancamento = (alerta.getLancamento() != null) ? alerta.getLancamento().getDescricao() : "";
+            return new SimpleStringProperty(descLancamento);
+        });
         colDiasAntes.setCellValueFactory(new PropertyValueFactory<>("diasAntes"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
 

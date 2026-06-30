@@ -47,6 +47,11 @@ public class LancamentoService {
         return repository.findByUsuario(usuario, pageable);
     }
 
+    public List<Lancamento> listarTodosPorUsuario() {
+        Usuario usuario = authService.getUsuarioLogado();
+        return repository.findByUsuarioOrderByDataDesc(usuario);
+    }
+
     public List<LancamentoExportDTO> obterLancamentosParaExportacao(String descricao) {
         Usuario usuario = authService.getUsuarioLogado();
         List<Lancamento> lancamentos;

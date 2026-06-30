@@ -31,6 +31,10 @@ public class Alerta {
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
+    @ManyToOne
+    @JoinColumn(name = "lancamento_id")
+    private Lancamento lancamento;
+
     private String descricao;
     private LocalDate dataVencimento;
     private LocalDate dataCriacao = LocalDate.now();
@@ -132,12 +136,20 @@ public class Alerta {
         return Objects.equals(this.usuario.getId(), usuario.getId());
     }
 
+    public Lancamento getLancamento() {
+        return lancamento;
+    }
+
+    public void setLancamento(Lancamento lancamento) {
+        this.lancamento = lancamento;
+    }
+
     public boolean estaVencido(LocalDate hoje) {
         return !Utils.isEmpty(dataVencimento) && hoje.isAfter(dataVencimento);
     }
 
     public boolean deveLancarAlerta(LocalDate hoje) {
-        if (!Utils.isEmpty(dataVencimento) || Utils.isEmpty(diasAntes)) return false;
+        if (Utils.isEmpty(dataVencimento) || Utils.isEmpty(diasAntes)) return false;
         LocalDate dataDisparo = dataVencimento.minusDays(diasAntes);
         return !hoje.isBefore(dataDisparo);
     }
