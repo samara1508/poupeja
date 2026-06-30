@@ -34,7 +34,7 @@ public class EmailService {
         try {
             client.send(mail);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao enviar e-mail via Mailtrap SDK: " + e.getMessage(), e);
+            throw new IllegalStateException("Erro ao enviar e-mail via Mailtrap SDK: " + e.getMessage(), e);
         }
     }
 }
