@@ -39,6 +39,10 @@ public class FormaPagamentoService {
         return repository.findByUsuario(usuario);
     }
 
+    public List<FormaPagamento> listarAtivasPorUsuario(Usuario usuario) {
+        return repository.findByUsuarioAndAtivoTrue(usuario);
+    }
+
     public FormaPagamento salvar(FormaPagamento formaPagamento) {
         return repository.save(formaPagamento);
     }

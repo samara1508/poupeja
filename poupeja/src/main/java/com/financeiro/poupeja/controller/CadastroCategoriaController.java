@@ -81,21 +81,17 @@ public class CadastroCategoriaController {
             return;
         }
 
-        Double limite;
-        if(txtLimite.getText().isBlank()){
+        Double limite = parseLimite(txtLimite.getText());
+        if(limite == null){
             mostrarErro("Erro",
-                    "Número não identificado.");
+                    "Digite um limite valido para a categoria.");
             return;
-        } else {
-            limite = Double.parseDouble(txtLimite.getText());
-            if(limite < 0){
-                mostrarErro("Erro",
-                    "Números menores que zero não são aceitos.");
-                return;
-            }
         }
-
-        boolean ativo = chkAtivo.isSelected();
+        if(limite < 0){
+            mostrarErro("Erro",
+                "Numeros menores que zero nao sao aceitos.");
+            return;
+        }
 
 
         try {
@@ -106,7 +102,7 @@ public class CadastroCategoriaController {
                     null,
                     descricao,
                     limite,
-                    ativo,
+                    chkAtivo.isSelected(),
                     usuarioLogado
             );
 
@@ -124,6 +120,18 @@ public class CadastroCategoriaController {
         } catch (IllegalArgumentException e) {
 
             mostrarErro("Erro", e.getMessage());
+        }
+    }
+
+    private Double parseLimite(String limiteTexto) {
+        if (limiteTexto == null || limiteTexto.isBlank()) {
+            return null;
+        }
+
+        try {
+            return Double.parseDouble(limiteTexto.trim().replace(",", "."));
+        } catch (NumberFormatException e) {
+            return null;
         }
     }
 

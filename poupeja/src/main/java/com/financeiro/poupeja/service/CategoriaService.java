@@ -40,6 +40,10 @@ public class CategoriaService {
         return categoriaRepository.findByUsuario(usuario);
     }
 
+    public List<Categoria> listarAtivasPorUsuario(Usuario usuario) {
+        return categoriaRepository.findByUsuarioAndAtivoTrue(usuario);
+    }
+
     public Categoria salvar(Categoria categoria) {
         return categoriaRepository.save(categoria);
     }

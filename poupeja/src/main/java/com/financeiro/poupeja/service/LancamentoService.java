@@ -108,7 +108,7 @@ public class LancamentoService {
             FormaPagamento formaPagamento,
             Integer quantidadeParcelas) {
 
-        validarDadosLancamento(descricao, valorTotal, data, tipo, recorrencia, quantidadeParcelas);
+        validarDadosLancamento(descricao, valorTotal, data, tipo, recorrencia, categoria, formaPagamento, quantidadeParcelas);
 
         Lancamento lancamento = new Lancamento();
         lancamento.setDescricao(descricao);
@@ -136,7 +136,7 @@ public class LancamentoService {
             FormaPagamento formaPagamento,
             Integer quantidadeParcelas) {
 
-        validarDadosLancamento(descricao, valorTotal, data, tipo, recorrencia, quantidadeParcelas);
+        validarDadosLancamento(descricao, valorTotal, data, tipo, recorrencia, categoria, formaPagamento, quantidadeParcelas);
 
         Lancamento lancamento = buscarPorIdDoUsuario(id);
         lancamento.setDescricao(descricao);
@@ -181,6 +181,8 @@ public class LancamentoService {
             LocalDate data,
             TipoLancamento tipo,
             TipoRecorrencia recorrencia,
+            Categoria categoria,
+            FormaPagamento formaPagamento,
             Integer quantidadeParcelas) {
 
         if (Utils.isEmpty(descricao)) {
@@ -197,6 +199,12 @@ public class LancamentoService {
         }
         if (recorrencia == null) {
             throw new IllegalArgumentException("A recorrencia e obrigatoria.");
+        }
+        if (categoria != null && !Boolean.TRUE.equals(categoria.getAtivo())) {
+            throw new IllegalArgumentException("A categoria selecionada precisa estar ativa.");
+        }
+        if (formaPagamento != null && !Boolean.TRUE.equals(formaPagamento.getAtivo())) {
+            throw new IllegalArgumentException("A forma de pagamento selecionada precisa estar ativa.");
         }
         if (quantidadeParcelas == null || quantidadeParcelas <= 0) {
             throw new IllegalArgumentException("A quantidade de parcelas deve ser maior que zero.");

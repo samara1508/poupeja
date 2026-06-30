@@ -34,7 +34,7 @@
     </VBox>
 
     <CheckBox fx:id="chkAtivo"
-              text="Forma de pagamento ativa"
+              text="Categoria ativa"
               selected="true"/>
               
     <Button text="Criar Categoria" onAction="#salvar" prefWidth="300" prefHeight="40">
