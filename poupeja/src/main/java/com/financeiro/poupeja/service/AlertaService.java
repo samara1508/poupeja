@@ -51,7 +51,7 @@ public class AlertaService {
         
         if (temPendentes && agendamentoFuturo == null) {
             log.info("Alertas pendentes encontrados para o usuário logado. Iniciando agendamento (intervalo: 1min)...");
-            agendamentoFuturo = taskScheduler.scheduleAtFixedRate(this::verificarEDispararAlertasAgendados, Duration.ofMinutes(1));
+            agendamentoFuturo = taskScheduler.scheduleAtFixedRate(this::verificarEDispararAlertasAgendados, Duration.ofSeconds(15));
         }
     }
 
@@ -83,7 +83,7 @@ public class AlertaService {
 
         if (agendamentoFuturo == null) {
             log.info("Novo alerta pendente cadastrado. Iniciando agendamento periódico...");
-            agendamentoFuturo = taskScheduler.scheduleAtFixedRate(this::verificarEDispararAlertasAgendados, Duration.ofMinutes(1));
+            agendamentoFuturo = taskScheduler.scheduleAtFixedRate(this::verificarEDispararAlertasAgendados, Duration.ofSeconds(15));
         }
     }
 
